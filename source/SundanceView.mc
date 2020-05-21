@@ -115,8 +115,7 @@ class SundanceView extends WatchUi.WatchFace {
         fnt22 = WatchUi.loadResource(Rez.Fonts.fntSd22);
         fnt23 = WatchUi.loadResource(Rez.Fonts.fntSd23);
         fntIcons = WatchUi.loadResource(Rez.Fonts.fntIcons);
-        fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);
-
+        fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);       
     }
 
     // Load your resources here
@@ -1094,7 +1093,9 @@ class SundanceView extends WatchUi.WatchFace {
     
     // set variable named remainingBattery to remaining battery in days / hours
     function getRemainingBattery(time, batteryPercent) { 
-        if (System.getSystemStats().charging) {         // if charging
+        // if (System.getSystemStats().charging || ((batteryPercent + .5)  >= 100)) {         // if charging
+        if (System.getSystemStats().charging) {         // if charging        
+            app.setProperty("batteryTime", null);
             app.setProperty("remainingBattery", "W8");  // will show up "wait" sign
         } else {
             var bat = app.getProperty("batteryTime");
@@ -1103,11 +1104,8 @@ class SundanceView extends WatchUi.WatchFace {
                 app.setProperty("batteryTime", bat);
                 app.setProperty("remainingBattery", "W8");    // still waiting for battery
             } else {
-                var nowValue = time.now().value(); 
-                if (bat[1] < batteryPercent) {              // if the battery will increase (charging, F6X Solar or heat)
-                    bat = [nowValue, batteryPercent];       // will save the new battery state for next calculating round
-                    app.setProperty("batteryTime", bat);
-                } else if (bat[1] > batteryPercent) {
+                if (bat[1] > batteryPercent) {       // battery draining
+                    var nowValue = time.now().value(); 
                     var remaining = (bat[1] - batteryPercent).toFloat() / (nowValue - bat[0]).toFloat();
                     remaining = remaining * 60 * 60;    // percent consumption per hour
                     remaining = batteryPercent.toFloat() / remaining;

@@ -1,5 +1,3 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap id="Bg" filename="images/bg.png" />
-    <!-- <bitmap id="BgInvert" filename="images/bg_invert.png" /> -->
 </drawables>

@@ -1,4 +1,24 @@
-Version 2.5
+Version 3.4 / 3.5 / 3.6 / 3.7
+- application size optimalized
+- fixed the nonsence battery prediction after charging (hopefully it will be fixed after next charge)
+- remaining battery algorithm simplified 
+Version 3.3
+- added baro tracking period option for the graph (default 8 hours)
+Version 3.2
+- bug fixing
+Version 3.1
+- bug fixing, optimalization
+Version 3.0
+- Polishing remaining battery time
+- Fixing issue of disappearing the remaining time value
+Version 2.9
+- Quick fix for battery state saving issue
+Version 2.8
+- Added earlier requested option remaining battery in days (still working on the best algorithm)
+Version 2.7
+- Baro graph finally fixed
+- Added option to choose treshold for baro graph
+Version 2.5 / 2.6
 - added second time option
 - Suunto like pointer modified (make little bit smaller base)
 - Baro graph redraw every hour
