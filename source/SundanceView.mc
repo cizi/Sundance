@@ -1105,7 +1105,11 @@ class SundanceView extends WatchUi.WatchFace {
                 app.setProperty("remainingBattery", "W8");    // still waiting for battery
             } else {
                 var nowValue = time.now().value(); 
-                if (bat[1] > batteryPercent) {
+                if ((batteryPercent + .5) > 100) {
+                    bat = [time.now().value(), batteryPercent];
+                    app.setProperty("batteryTime", bat);
+                    app.setProperty("remainingBattery", "W8");  // will show up "wait" sign     
+                } else if (bat[1] > batteryPercent) {
                     var remaining = (bat[1] - batteryPercent).toFloat() / (nowValue - bat[0]).toFloat();
                     remaining = remaining * 60 * 60;    // percent consumption per hour
                     remaining = batteryPercent.toFloat() / remaining;
