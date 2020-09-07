@@ -80,7 +80,8 @@
 
     <string id="ShowFullDiaTitle">Show full dial (included small hours indicators)</string>
     <string id="ShowAlarmIndicatorTitle">Show alarm indicator</string>
-    <string id="ShowNotificationAndConnectionTitle">Show connection and notification indicator</string>
+    <string id="ShowConnectionTitle">Show connection indicator</string>
+    <string id="ShowNotificationTitle">Show notification indicator</string>
     <string id="OptionDisabled">Disabled</string>
 
     <string id="SmallHoursIndicatorSizeTitle">Small hour indicators size</string>

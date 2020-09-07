@@ -1,3 +1,6 @@
+Version 3.9
+- notification icon is not visible if the watch is not connected to the phone
+- connection icon and bluetooth icon have now separated settings
 Version 3.8
 - fixing battery prediction logic after charging
 Version 3.4 / 3.5 / 3.6 / 3.7

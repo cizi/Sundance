@@ -233,10 +233,14 @@ class SundanceView extends WatchUi.WatchFace {
         drawDataField(App.getApp().getProperty("Opt3"), 3, field3, today, secondTime, dc);  // FIELD 3
         drawDataField(App.getApp().getProperty("Opt4"), 4, field4, today, secondTime, dc);  // FIELD 4
         
-        if (App.getApp().getProperty("ShowNotificationAndConnection")) {
+        if (App.getApp().getProperty("ShowConnection")) {
             drawBtConnection(dc);
+        }
+        
+        if (App.getApp().getProperty("ShowNotification")) {            
             drawNotification(dc);
         }
+        
         if (App.getApp().getProperty("AlarmIndicator")) {
             drawBell(dc);
         }
@@ -963,7 +967,7 @@ class SundanceView extends WatchUi.WatchFace {
 
     // Draw notification alarm
     function drawNotification(dc) {
-        if ((settings has : notificationCount) && (settings.notificationCount)) {
+        if ((settings has : phoneConnected) && (settings.phoneConnected) && (settings has : notificationCount) && (settings.notificationCount)) {
             // var radius = 5;
             dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
             dc.drawText(halfWidth - 1, dc.getHeight() - Gfx.getFontHeight(Gfx.FONT_TINY) - 26, fntIcons, "5", Gfx.TEXT_JUSTIFY_LEFT);

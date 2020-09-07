@@ -283,7 +283,11 @@
         <settingConfig type="boolean" />
     </setting>
 
-    <setting propertyKey="@Properties.ShowNotificationAndConnection" title="@Strings.ShowNotificationAndConnectionTitle">
+    <setting propertyKey="@Properties.ShowConnection" title="@Strings.ShowConnectionTitle">
+        <settingConfig type="boolean" />
+    </setting>
+    
+     <setting propertyKey="@Properties.ShowNotification" title="@Strings.ShowNotificationTitle">
         <settingConfig type="boolean" />
     </setting>
     

@@ -21,7 +21,8 @@
 
     <property id="ShowFullDial" type="boolean">true</property>
     <property id="AlarmIndicator" type="boolean">true</property>
-    <property id="ShowNotificationAndConnection" type="boolean">true</property>
+    <property id="ShowNotification" type="boolean">true</property>
+    <property id="ShowConnection" type="boolean">true</property>
     <property id="UseMilitaryFormat" type="boolean">false</property>
 
     <property id="BlueHourColor" type="number">0x0000FF</property>
