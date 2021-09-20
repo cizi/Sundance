@@ -1,0 +1,64 @@
+Version 4.4
+- fixed rounding distance for Chronos and Fenix 5/6 on field 2 and 3
+- Chronos position fixed for steps and pressure
+Version 4.3
+- fixed moon phase position for data fields 2,3,4
+- added Garmin Chronos support (tested only in simulator, if any layout issue, please send me an email)
+Version 4.2
+- added support of inHg units in air pressure option
+Version 4.1
+- fixed black circel visivble on white background
+Version 4.0
+- added devices 
+Version 3.9
+- notification icon is not visible if the watch is not connected to the phone (no stuck notification on the watch anymore)
+- connection icon and bluetooth icon have now separated settings
+Version 3.8
+- fixing battery prediction logic after charging
+Version 3.4 / 3.5 / 3.6 / 3.7
+- application size optimalized
+- fixed the nonsence battery prediction after charging (hopefully it will be fixed after next full charge)
+- remaining battery algorithm simplified
+Version 3.3
+- added baro tracking period option for the graph (default 8 hours)
+Version 3.2
+- bug fixing
+Version 3.1
+- bug fixing, optimalization
+Version 3.0
+- Polishing remaining battery time
+- Fixing issue of disappearing the remaining time value
+Version 2.9
+- Quick fix for battery state saving issue
+Version 2.8
+- Added earlier requested option remaining battery in days (still working on the best algorithm)
+Version 2.7
+- Baro graph finally fixed
+- Added option to choose treshold for baro graph
+Version 2.5 / 2.6
+- added second time option
+- Suunto like pointer modified (make little bit smaller base)
+- Baro graph redraw every hour (version 2.6 quick fix for graph values)
+- Added distance option in km
+Version 2.4
+- pressure algorithm simplified and optimized
+- added transparent colour for blue and golden hour
+- added new current time pointers
+Version 2.3
+- battery consumption optimalization (stage 4/4) - watch layout is computed just once
+- added more colours in the colours options
+- added new type of current type pointer (arrow)
+Version 2.2
+- battery consumption optimalization (stage 2/4) - sun events are calculated once per day (max twice - after sunset, for next day sunrise)
+Version 2.1
+- added option for colour theme during night mode (if enabled) for better readability for some colours
+- optimalization started for better battery life
+Version 2.0
+- added more options
+- icon changed for better readability (I hope)
+- font type changed for data fields for better readability
+- fixed little bit duration of blue hour
+- bug fixing
+- Fenix 5 family support
+- moon phase is possible add next to date
+- now is possible have blue and golden exact time like sunset / sunrise info

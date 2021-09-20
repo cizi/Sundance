@@ -1,0 +1,29 @@
+<fonts>
+	<font antialias="true" id="fntSd01" filename="sd01.fnt" filter="01" />	
+	<font antialias="true" id="fntSd02" filename="sd02.fnt" filter="02" />	
+	<font antialias="true" id="fntSd03" filename="sd03.fnt" filter="03" />	
+	<font antialias="true" id="fntSd04" filename="sd04.fnt" filter="04" />	
+	<font antialias="true" id="fntSd05" filename="sd05.fnt" filter="05" />	
+	
+	<font antialias="true" id="fntSd19" filename="sd19.fnt" filter="19" />	
+	<font antialias="true" id="fntSd20" filename="sd20.fnt" filter="02" />	
+	<font antialias="true" id="fntSd21" filename="sd21.fnt" filter="21" />	
+	<font antialias="true" id="fntSd22" filename="sd22.fnt" filter="2" />	
+	<font antialias="true" id="fntSd23" filename="sd23.fnt" filter="23" />
+
+	<font antialias="true" id="fntSd09" filename="sd09.fnt" filter="09" />	
+	<font antialias="true" id="fntSd11" filename="sd11.fnt" filter="1" />
+	<font antialias="true" id="fntSd08" filename="sd08.fnt" filter="08" />
+	<font antialias="true" id="fntSd10" filename="sd10.fnt" filter="10" />
+	<font antialias="true" id="fntSd07" filename="sd07.fnt" filter="07" />
+	
+	<font antialias="true" id="fntSd13" filename="sd13.fnt" filter="13" />
+	<font antialias="true" id="fntSd14" filename="sd14.fnt" filter="14" />
+	<font antialias="true" id="fntSd15" filename="sd15.fnt" filter="15" />
+	<font antialias="true" id="fntSd16" filename="sd16.fnt" filter="16" />
+	<font antialias="true" id="fntSd17" filename="sd17.fnt" filter="17" />
+	
+	<font antialias="true" id="fntIcons" filename="crystal-icons.fnt" />
+	
+	<font antialias="true" id="fntDataFields" filename="nk57.fnt" /> 
+</fonts>

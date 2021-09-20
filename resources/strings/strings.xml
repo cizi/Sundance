@@ -1,0 +1,154 @@
+<strings>
+
+    <string id="AppName">Sundance</string>
+
+    <string id="BackgroundColorTitle">Background Color</string>
+    <string id="ForegroundColorTitle">Text Color</string>
+    <string id="DaylightProgessTitle">Daylight Progress Line Color (theme color)</string>
+    <string id="DaylightProgessWidthTitle">Daylight Progress Line Width</string>
+
+    <string id="CurrentTimePointerTitle">Current Time Pointer Color</string>
+    <string id="CurrentTimePointerWidthTitle">Current Time Pointer Size</string>
+
+    <string id="Opt1Title">Field 1</string>
+    <string id="Opt2Title">Field 2</string>
+    <string id="Opt3Title">Field 3</string>
+    <string id="Opt4Title">Field 4</string>
+    <string id="MoonPhase">Moon Phase</string>
+    <string id="SunsetSunrise">Sunset / Sunrise</string>
+    <string id="NextSunEvent">BH/GH/Full Sun/GH/BH</string>
+    <string id="Steps">Today's steps</string>
+    <string id="Distance">Today's distance (km)</string>    
+    <string id="Calories">Today's calories (kCal / MCal)</string>
+    <string id="HR">HR</string>
+    <string id="Battery">Battery %</string>
+    <string id="BatteryInDays">Battery remaining in days</string>
+    <string id="Altitude">Altitude</string>
+    <string id="Pressure">Pressure</string>
+    <string id="Floors">Floors</string>
+
+    <string id="MilitaryFormatTitle">Military Format for 24 Hour Time</string>
+    <string id="DateFormatTitle">Date Format</string>
+    <string id="ShowMoonPhaseBeforeDateTitle">Show Moon Phase Before Date</string>    
+
+    <string id="DateFormat1">Day Date Month</string>
+    <string id="DateFormat2">Day Month Date </string>
+    <string id="DateFormat3">Day Date</string>
+    <string id="DateFormat4">Month / Date</string>
+
+    <string id="ColorBlack">Black</string>
+    <string id="ColorDarkGrey">Dark Gray</string>
+    <string id="ColorWhite">White</string>
+   
+    <string id="ColorLightBlue">Light Blue</string>
+    <string id="ColorBlue">Blue</string>    
+    <string id="ColorLightRed">Light Red</string>
+    <string id="ColorRed">Red</string>   
+    <string id="ColorDarkYellow">Dark Yellow</string>
+    <string id="ColorYellow">Yellow</string>
+    <string id="ColorLightYellow">Light Yellow</string>   
+    <string id="ColorLightGrey">Light Grey</string>
+    <string id="ColorOrange">Orange</string>
+    <string id="ColorLightOrange">Light Orange</string>    
+    <string id="ColorGreen">Green</string>
+    <string id="ColorDarkGreen">Dark Green</string>
+    <string id="ColorLightGreen">Light Green</string>    
+    <string id="ColorDarkBlue">Dark Blue</string>
+    <string id="ColorPink">Pink</string>
+    <string id="ColorTransparent">Transparent</string>
+    
+    <string id="CurrentTimePointerTypeTitle">Type of current time pointer</string>
+    <string id="PointIn">Point in dial</string>
+    <string id="ArrowFilled">Arrow to dial (filled)</string>  
+    <string id="ArrowTransparent">Arrow to dial (transparent)</string>  
+    <string id="LikeASuunto">Suunto like pointer</string> 
+        
+
+    <string id="width2">2</string>
+    <string id="width3">3</string>
+    <string id="width4">4</string>
+
+    <string id="width6">6</string>
+    <string id="width8">8</string>
+    <string id="width10">10</string>
+    <string id="width12">12</string>
+    <string id="width14">14</string>
+    <string id="width16">16</string>
+    <string id="width18">18</string>
+	<string id="width20">20</string>
+	<string id="width24">24</string>
+
+    <string id="ShowFullDiaTitle">Show full dial (included small hours indicators)</string>
+    <string id="ShowAlarmIndicatorTitle">Show alarm indicator</string>
+    <string id="ShowConnectionTitle">Show connection indicator</string>
+    <string id="ShowNotificationTitle">Show notification indicator</string>
+    <string id="OptionDisabled">Disabled</string>
+
+    <string id="SmallHoursIndicatorSizeTitle">Small hour indicators size</string>
+    <string id="ShowGoldenBlueHoursTitle">Show 'Golden' and 'Blue' hours on dial</string>
+
+    <string id="GoldenHourColorTitle">Golden hours color</string>
+    <string id="BlueHourColorTitle">Blue hours color</string>
+    
+    <string id="ShowSecondsTitle">Show seconds (causes more battery drain)</string>
+    <string id="NightModeTitle">Night mode (better readability after sunset)</string>
+    
+    <string id="NightModeThemeTitle">Use different theme color during nigh mode</string>
+    <string id="NightModeThemeColorTitle">Night mode theme color</string>  
+    
+    <string id="ShowSecondTimeOnDialTitle">Show second time pointer on dial</string>  
+    <string id="SecondTimeOnDialColorTitle">Second time pointer color on dial</string> 
+    <string id="SecondTimePointerTypeTitle">Second time pointer type (if enabled on dial)</string>   
+    <string id="SecondTimeUtcOffsetTitle">Second time UTC offset</string>  
+    <string id="SecondTime">Second time</string>
+        
+    
+    <string id="UtcMinus12">-12.00</string> 
+    <string id="UtcMinus11">-11.00</string> 
+    <string id="UtcMinus10">-10.00</string> 
+    <string id="UtcMinus95">-09.30</string> 
+    <string id="UtcMinus9">-09.00</string> 
+    <string id="UtcMinus8">-08.00</string> 
+    <string id="UtcMinus7">-07.00</string> 
+    <string id="UtcMinus6">-06.00</string> 
+    <string id="UtcMinus5">-05.00</string> 
+    <string id="UtcMinus45">-04.30</string>
+    <string id="UtcMinus4">-04.00</string> 
+    <string id="UtcMinus35">-03.30</string> 
+    <string id="UtcMinus3">-03.00</string> 
+    <string id="UtcMinus2">-02.00</string> 
+    <string id="UtcMinus1">-01.00</string> 
+    <string id="Utc">UTC</string> 
+    <string id="UtcPlus1">+01.00</string>
+    <string id="UtcPlus2">+02.00</string>
+    <string id="UtcPlus3">+03.00</string>
+    <string id="UtcPlus35">+03.30</string>
+    <string id="UtcPlus4">+04.00</string>
+    <string id="UtcPlus45">+04.30</string>
+    <string id="UtcPlus5">+05.00</string>
+    <string id="UtcPlus55">+05.30</string>
+    <string id="UtcPlus575">+05.45</string>
+    <string id="UtcPlus6">+06.00</string>
+    <string id="UtcPlus65">+06.30</string>
+    <string id="UtcPlus7">+07.00</string>
+    <string id="UtcPlus8">+08.00</string>
+    <string id="UtcPlus85">+08.30</string>
+    <string id="UtcPlus875">+08.45</string>
+    <string id="UtcPlus9">+09.00</string>
+    <string id="UtcPlus95">+09.30</string>
+    <string id="UtcPlus10">+10.00</string>
+    <string id="UtcPlus105">+10.30</string>
+    <string id="UtcPlus11">+11.00</string>
+    <string id="UtcPlus12">+12.00</string>
+    <string id="UtcPlus1275">+12.45</string>
+    <string id="UtcPlus13">+13.00</string>
+    <string id="UtcPlus14">+14.00</string>        
+        
+    <string id="PressureGraphPeriodTitle">BARO graph tracking time (hours)</string>
+    <string id="PressureGraphBorderTitle">Threshold value for BARO graph (hPa)</string>
+    <string id="PressureUnitTitle">Pressure unit</string>
+    
+    <string id="hpa">hPa</string>
+    <string id="inhg">inHg</string>
+
+</strings>
