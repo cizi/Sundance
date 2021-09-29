@@ -859,16 +859,16 @@ class SundanceView extends WatchUi.WatchFace {
     function drawSteps(posX, posY, dc, position) {
         if (position == 1) {
             posX -= 10;
-            posY = (is240dev ? posY - 18 : posY - 16);
+            posY -= (is240dev ? 18 : 16);
         }
         if (position == 2) {
-            posX = (is240dev ? (posX - 6) : (posX - 4));
+            posX -= (is240dev ? 6 : 4);
         }
         if (position == 3) {
-            posX = (is240dev ? (posX - 40) : (posX - 36));
+            posX -= (is218dev ? 40 : 36); //(is280dev || is240dev ? 36 : 40);
         }
         if (position == 4) {
-            posX = (is240dev ? (posX - 40) : (posX - 41));
+            posX -= (is240dev ? 40 : 41);
         }
 
         dc.setColor(themeColor, bgColor);
@@ -1158,7 +1158,7 @@ class SundanceView extends WatchUi.WatchFace {
             xPos += 8;
         }
         if ((position == 4 ) && is218dev) {
-            xPos += 4;
+            xPos += 8;
         } 
 
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
