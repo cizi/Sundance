@@ -1157,6 +1157,9 @@ class SundanceView extends WatchUi.WatchFace {
         if (position == 3) {
             xPos += 8;
         }
+        if ((position == 4 ) && is218dev) {
+            xPos += 4;
+        } 
 
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
         var alt = getAltitude();
@@ -1190,10 +1193,10 @@ class SundanceView extends WatchUi.WatchFace {
             yPos = (is240dev ? yPos - 18 : yPos - 16);
         }
         if (position == 2) {
-            xPos += (is218dev ? 26 : 30);
+            xPos += (is218dev ? 28 : 30);
         }
         if (position == 3) {
-            xPos -= (is240dev ? 4 : (is218dev ? 10 : 0));
+            xPos -= (is240dev ? 4 : (is218dev ? 8 : 0));
         }
         var lastPressureLoggingTime = (app.getProperty("lastPressureLoggingTime") == null ? null : app.getProperty("lastPressureLoggingTime").toNumber());
         if ((today.min == 0) && (today.hour != lastPressureLoggingTime)) {   // grap is redrawning only in whole hour
@@ -1250,7 +1253,8 @@ class SundanceView extends WatchUi.WatchFace {
                 pressure = Math.round(0.02953 * pressure.toFloat()).format("%.2f");
             }
         } 
-        dc.drawText(xPos - 6, yPos, fntDataFields, pressure.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+        xPos -= (is218dev && ((position == 2) || (position == 3))) ? 8 : 6;
+        dc.drawText(xPos, yPos, fntDataFields, pressure.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
 
     // Draw small pressure graph based on baroFigure

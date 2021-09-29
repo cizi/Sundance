@@ -1,3 +1,5 @@
+Version 4.5
+- position update for Chronos
 Version 4.4
 - fixed rounding distance for Chronos and Fenix 5/6 on field 2 and 3
 - Chronos position fixed for steps and pressure
