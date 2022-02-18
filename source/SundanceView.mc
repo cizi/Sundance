@@ -36,6 +36,7 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var is218dev;
     hidden var is240dev;
     hidden var is280dev;
+    hidden var is416dev;
     hidden var secPosX;
     hidden var secPosY;
     hidden var secFontWidth;
@@ -116,8 +117,6 @@ class SundanceView extends WatchUi.WatchFace {
         fnt22 = WatchUi.loadResource(Rez.Fonts.fntSd22);
         fnt23 = WatchUi.loadResource(Rez.Fonts.fntSd23);
         fntIcons = WatchUi.loadResource(Rez.Fonts.fntIcons);
-        fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);
-
     }
 
     // Load your resources here
@@ -126,6 +125,7 @@ class SundanceView extends WatchUi.WatchFace {
         is218dev = (dc.getWidth() == 218);
         is240dev = (dc.getWidth() == 240);
         is280dev = (dc.getWidth() == 280);
+        is416dev = (dc.getWidth() == 416);
 
         halfWidth = dc.getWidth() / 2;
         secFontHeight = Gfx.getFontHeight(Gfx.FONT_TINY);
@@ -154,6 +154,12 @@ class SundanceView extends WatchUi.WatchFace {
         goldenAmMoment = null;
         goldenPmMoment = null;
         moonPhase = null;
+
+        if (is416dev) {
+            fntDataFields = Gfx.FONT_LARGE;
+        } else {
+            fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);
+        }
     }
 
     // Called when this View is brought to the foreground. Restore

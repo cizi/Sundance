@@ -12,6 +12,7 @@
             <iq:product id="descentmk2"/>
             <iq:product id="descentmk2s"/>
             <iq:product id="enduro"/>
+            <iq:product id="epix2"/>
             <iq:product id="fenix5"/>
             <iq:product id="fenix5plus"/>
             <iq:product id="fenix5splus"/>
@@ -41,6 +42,7 @@
             <iq:product id="marqdriver"/>
             <iq:product id="marqexpedition"/>
             <iq:product id="marqgolfer"/>
+            <iq:product id="venu2"/>
             <iq:product id="vivoactive3"/>
             <iq:product id="vivoactive3d"/>
             <iq:product id="vivoactive3m"/>
