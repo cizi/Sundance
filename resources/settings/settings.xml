@@ -276,7 +276,12 @@
     </setting>
 
     <setting propertyKey="@Properties.ShowFullDial" title="@Strings.ShowFullDiaTitle">
-        <settingConfig type="boolean" />
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.fullDialOff</listEntry>
+            <listEntry value="1">@Strings.fullDialOn</listEntry>
+            <listEntry value="2">@Strings.fullDialEachSecond</listEntry>
+            <listEntry value="3">@Strings.fullDialEachThird</listEntry>
+        </settingConfig>
     </setting>
 
     <setting propertyKey="@Properties.AlarmIndicator" title="@Strings.ShowAlarmIndicatorTitle">
@@ -395,6 +400,7 @@
         <settingConfig type="list">
             <listEntry value="0">@Strings.hpa</listEntry>
             <listEntry value="1">@Strings.inhg</listEntry>
+            <listEntry value="2">@Strings.ambientPressure</listEntry>
         </settingConfig>
     </setting>
       

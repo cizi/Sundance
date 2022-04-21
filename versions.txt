@@ -1,3 +1,11 @@
+Version 4.9 and 5.0 and 5.1
+- Added requested options
+- Optimalization
+Version 4.7 and 4.8
+- Fenix 7 family support added
+Version 4.6
+- code optimalization
+- Chronos positions update
 Version 4.5
 - position update for Chronos
 Version 4.4

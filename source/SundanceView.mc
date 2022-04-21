@@ -44,6 +44,7 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var uc;
     hidden var smallDialCoordsLines;
     hidden var smallDialCoordsNums;
+    var activityInfo;
 
     // Sunset / sunrise / moon phase vars
     hidden var sc;
@@ -95,6 +96,7 @@ class SundanceView extends WatchUi.WatchFace {
         app = App.getApp();
         sc = new SunCalc();
         uc = new UiCalc();
+        activityInfo = Activity.getActivityInfo();
 
         fnt1 = WatchUi.loadResource(Rez.Fonts.fntSd01);
         fnt2 = WatchUi.loadResource(Rez.Fonts.fntSd02);
@@ -446,8 +448,8 @@ class SundanceView extends WatchUi.WatchFace {
 
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
         var hr = "--";
-        if (Activity.getActivityInfo().currentHeartRate != null) {
-            hr = Activity.getActivityInfo().currentHeartRate.toString();
+        if (activityInfo.currentHeartRate != null) {
+            hr = activityInfo.currentHeartRate.toString();
         }
         dc.drawText(xPos - 19, yPos, fntDataFields, hr, Gfx.TEXT_JUSTIFY_LEFT);
     }
@@ -464,9 +466,9 @@ class SundanceView extends WatchUi.WatchFace {
         var goldenAm = null;
         var goldenPm = null;
 
-        location = Activity.getActivityInfo().currentLocation;
+        location = activityInfo.currentLocation;
         if (location) {
-            location = Activity.getActivityInfo().currentLocation.toRadians();
+            location = activityInfo.currentLocation.toRadians();
             app.setProperty("location", location);
         } else {
             location =  app.getProperty("location");
@@ -770,8 +772,9 @@ class SundanceView extends WatchUi.WatchFace {
         var hourValue = null;
         var angleToNrCorrection = -6;
         var font = null;
+        var fullDialConfig = App.getApp().getProperty("ShowFullDial").toNumber();
         for(var nr = 1; nr < 24; nr+=1) {
-            if ((nr != 6) && (nr != 12) && (nr != 18)) {
+            if ((nr != 6) && (nr != 12) && (nr != 18) && ((nr % fullDialConfig) == 0)) {
                 // needs to do it for each number because thre is now fucnking indirection call like $$var or ${var}
                 hourValue = nr + angleToNrCorrection;
                 coords = smallDialCoordsNums.get(hourValue);
@@ -1252,13 +1255,15 @@ class SundanceView extends WatchUi.WatchFace {
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
         
         // convert hPa to Mg
-        if (App.getApp().getProperty("PressureUnit").toNumber()) {
+        if (App.getApp().getProperty("PressureUnit").toNumber() == 1) {
             if (is218dev && ((position == 2) || (position == 3))) {
                 pressure = Math.round(0.02953 * pressure.toFloat()).format("%.1f");
             } else {
                 pressure = Math.round(0.02953 * pressure.toFloat()).format("%.2f");
             }
-        } 
+        } else if ((App.getApp().getProperty("PressureUnit").toNumber() == 2) && (activityInfo has :ambientPressure)) {
+            pressure = activityInfo.ambientPressure == null ? 0 : (activityInfo.ambientPressure / 100).toNumber();
+        }
         xPos -= (is218dev && ((position == 2) || (position == 3))) ? 8 : 6;
         dc.drawText(xPos, yPos, fntDataFields, pressure.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
@@ -1415,7 +1420,6 @@ class SundanceView extends WatchUi.WatchFace {
         var unit = "";
         var sample;
         var value = "";
-        var activityInfo = Activity.getActivityInfo();
         var altitude = activityInfo.altitude;
         if ((altitude == null) && (Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory)) {
             sample = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST })

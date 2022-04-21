@@ -78,7 +78,12 @@
 	<string id="width20">20</string>
 	<string id="width24">24</string>
 
-    <string id="ShowFullDiaTitle">Show full dial (included small hours indicators)</string>
+    <string id="ShowFullDiaTitle">Dial config (small hours indicators)</string>
+    <string id="fullDialOff">Off</string>
+    <string id="fullDialOn">On</string>
+    <string id="fullDialEachSecond">On (each second will be visible)</string>
+    <string id="fullDialEachThird">On (each third will be visible)</string>
+
     <string id="ShowAlarmIndicatorTitle">Show alarm indicator</string>
     <string id="ShowConnectionTitle">Show connection indicator</string>
     <string id="ShowNotificationTitle">Show notification indicator</string>
@@ -150,5 +155,6 @@
     
     <string id="hpa">hPa</string>
     <string id="inhg">inHg</string>
+    <string id="ambientPressure">ambient (hPa)</string>
 
 </strings>

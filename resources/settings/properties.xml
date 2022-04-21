@@ -19,7 +19,7 @@
     <property id="DateFormat" type="number">1</property>
     <property id="ShowMoonPhaseBeforeDate" type="boolean">false</property>
 
-    <property id="ShowFullDial" type="boolean">true</property>
+    <property id="ShowFullDial" type="number">1</property>
     <property id="AlarmIndicator" type="boolean">true</property>
     <property id="ShowNotification" type="boolean">true</property>
     <property id="ShowConnection" type="boolean">true</property>
