@@ -1,3 +1,15 @@
+Version 5.4
+- Code optimalization
+- Added dial hours for Tactix and Decent MK2s
+- Added Vivomove 4S
+Version 5.3
+- Fixing HR bug
+Version 5.2
+- Added FR955 watch support
+- Added option for Tactix and Decent MK2s to use watch own build bezel (no small numbers on dial)
+- Added option for bigger font for data fields (especially for 6X, 7X, Tactix)
+- Trying to fix data fields refreshing (need more testing)
+- Live seconds still buggy (sorry working on it)
 Version 4.9 and 5.0 and 5.1
 - Added requested options
 - Optimalization

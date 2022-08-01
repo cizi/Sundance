@@ -22,6 +22,14 @@ class SundanceApp extends Application.AppBase {
 
     // New app settings have been received so trigger a UI update
     function onSettingsChanged() {
+        var uc = new UiCalc();
+        var halfWidth = Application.getApp().getProperty("halfWidth");
+        var app = Application.getApp();
+        if (app.getProperty("UseWatchBezel")) {
+            app.setProperty("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));
+        } else {
+            app.setProperty("smallDialCoordsNums", uc.calculateSmallDialNums(halfWidth));
+        }
         WatchUi.requestUpdate();
     }
 

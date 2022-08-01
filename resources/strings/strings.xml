@@ -6,6 +6,7 @@
     <string id="ForegroundColorTitle">Text Color</string>
     <string id="DaylightProgessTitle">Daylight Progress Line Color (theme color)</string>
     <string id="DaylightProgessWidthTitle">Daylight Progress Line Width</string>
+    <string id="UseBiggerFontDataFieldsTitle">Bigger fot for data fields (esp. for Tactix, 6X, 7X watches)</string>
 
     <string id="CurrentTimePointerTitle">Current Time Pointer Color</string>
     <string id="CurrentTimePointerWidthTitle">Current Time Pointer Size</string>
@@ -78,6 +79,7 @@
 	<string id="width20">20</string>
 	<string id="width24">24</string>
 
+    <string id="UseWatchBezelTitle">Use watch build bezel instead of dial (Tactix, Decent MK2s, etc.)</string>
     <string id="ShowFullDiaTitle">Dial config (small hours indicators)</string>
     <string id="fullDialOff">Off</string>
     <string id="fullDialOn">On</string>

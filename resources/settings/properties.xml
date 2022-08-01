@@ -10,6 +10,7 @@
     
     <property id="DaylightProgess" type="number">0xFFFF00</property>
     <property id="DaylightProgessWidth" type="number">6</property>
+    <property id="UseBiggerFontDataFields" type="boolean">false</property>
     <property id="CurrentTimePointerWidth" type="number">16</property>
     <property id="ShowGoldenBlueHours" type="boolean">false</property>
 
@@ -19,6 +20,7 @@
     <property id="DateFormat" type="number">1</property>
     <property id="ShowMoonPhaseBeforeDate" type="boolean">false</property>
 
+    <property id="UseWatchBezel" type="boolean">false</property>
     <property id="ShowFullDial" type="number">1</property>
     <property id="AlarmIndicator" type="boolean">true</property>
     <property id="ShowNotification" type="boolean">true</property>

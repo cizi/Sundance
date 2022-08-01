@@ -9,7 +9,6 @@ using Toybox.Math;
 using Toybox.Activity;
 using Toybox.ActivityMonitor;
 using Toybox.SensorHistory;
-using Toybox.Application;
 
 class SundanceView extends WatchUi.WatchFace {
 
@@ -36,15 +35,15 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var is218dev;
     hidden var is240dev;
     hidden var is280dev;
-    hidden var is416dev;
+    // hidden var is416dev; Epix2, Venu2 etc. need polishing
     hidden var secPosX;
     hidden var secPosY;
     hidden var secFontWidth;
     hidden var secFontHeight;
     hidden var uc;
     hidden var smallDialCoordsLines;
-    hidden var smallDialCoordsNums;
-    var activityInfo;
+    hidden var activityInfo;
+    hidden var dataFieldsYCentering;
 
     // Sunset / sunrise / moon phase vars
     hidden var sc;
@@ -82,8 +81,31 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var fnt21 = null;
     hidden var fnt22 = null;
     hidden var fnt23 = null;
+
+    hidden var fnt1r = null;
+    hidden var fnt2r = null;
+    hidden var fnt3r = null;
+    hidden var fnt4r = null;
+    hidden var fnt5r = null;
+    hidden var fnt7r = null;
+    hidden var fnt8r = null;
+    hidden var fnt9r = null;
+    hidden var fnt11r = null;
+    hidden var fnt10r = null;
+    hidden var fnt13r = null;
+    hidden var fnt14r = null;
+    hidden var fnt15r = null;
+    hidden var fnt16r = null;
+    hidden var fnt17r = null;
+    hidden var fnt19r = null;
+    hidden var fnt20r = null;
+    hidden var fnt21r = null;
+    hidden var fnt22r = null;
+    hidden var fnt23r = null;
+
     hidden var fntIcons = null;
     hidden var fntDataFields = null;
+    hidden var useBezelAsDial = null;
 
     hidden var halfWidth = null;
     hidden var field1 = null;
@@ -96,7 +118,6 @@ class SundanceView extends WatchUi.WatchFace {
         app = App.getApp();
         sc = new SunCalc();
         uc = new UiCalc();
-        activityInfo = Activity.getActivityInfo();
 
         fnt1 = WatchUi.loadResource(Rez.Fonts.fntSd01);
         fnt2 = WatchUi.loadResource(Rez.Fonts.fntSd02);
@@ -118,6 +139,28 @@ class SundanceView extends WatchUi.WatchFace {
         fnt21 = WatchUi.loadResource(Rez.Fonts.fntSd21);
         fnt22 = WatchUi.loadResource(Rez.Fonts.fntSd22);
         fnt23 = WatchUi.loadResource(Rez.Fonts.fntSd23);
+
+        fnt1r = WatchUi.loadResource(Rez.Fonts.fntSd01_r);
+        fnt2r = WatchUi.loadResource(Rez.Fonts.fntSd02_r);
+        fnt3r = WatchUi.loadResource(Rez.Fonts.fntSd03_r);
+        fnt4r = WatchUi.loadResource(Rez.Fonts.fntSd04_r);
+        fnt5r = WatchUi.loadResource(Rez.Fonts.fntSd05_r);
+        fnt11r = WatchUi.loadResource(Rez.Fonts.fntSd11_r);
+        fnt10r = WatchUi.loadResource(Rez.Fonts.fntSd10_r);
+        fnt9r = WatchUi.loadResource(Rez.Fonts.fntSd09_r);
+        fnt8r = WatchUi.loadResource(Rez.Fonts.fntSd08_r);
+        fnt7r = WatchUi.loadResource(Rez.Fonts.fntSd07_r);
+        fnt13r = WatchUi.loadResource(Rez.Fonts.fntSd13_r);
+        fnt14r = WatchUi.loadResource(Rez.Fonts.fntSd14_r);
+        fnt15r = WatchUi.loadResource(Rez.Fonts.fntSd15_r);
+        fnt16r = WatchUi.loadResource(Rez.Fonts.fntSd16_r);
+        fnt17r = WatchUi.loadResource(Rez.Fonts.fntSd17_r);
+        fnt19r = WatchUi.loadResource(Rez.Fonts.fntSd19_r);
+        fnt20r = WatchUi.loadResource(Rez.Fonts.fntSd20_r);
+        fnt21r = WatchUi.loadResource(Rez.Fonts.fntSd21_r);
+        fnt22r = WatchUi.loadResource(Rez.Fonts.fntSd22_r);
+        fnt23r = WatchUi.loadResource(Rez.Fonts.fntSd23_r);
+
         fntIcons = WatchUi.loadResource(Rez.Fonts.fntIcons);
     }
 
@@ -127,7 +170,7 @@ class SundanceView extends WatchUi.WatchFace {
         is218dev = (dc.getWidth() == 218);
         is240dev = (dc.getWidth() == 240);
         is280dev = (dc.getWidth() == 280);
-        is416dev = (dc.getWidth() == 416);
+        // is416dev = (dc.getWidth() == 416);
 
         halfWidth = dc.getWidth() / 2;
         secFontHeight = Gfx.getFontHeight(Gfx.FONT_TINY);
@@ -145,7 +188,12 @@ class SundanceView extends WatchUi.WatchFace {
         field3 = [halfWidth + 56, yPosFor23];
         field4 = [(dc.getWidth() / 13) * 7, ((dc.getHeight() / 4).toNumber() * 3) - 6];     // on F6 [140, 189]
 
-        smallDialCoordsNums = uc.calculateSmallDialNums(halfWidth);
+        app.setProperty("halfWidth", halfWidth);
+        if (app.getProperty("UseWatchBezel")) {
+            app.setProperty("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));
+        } else {
+            app.setProperty("smallDialCoordsNums", uc.calculateSmallDialNums(halfWidth));
+        }
         smallDialCoordsLines = uc.calculateSmallDialLines(halfWidth);
 
         // sun / moon etc. init
@@ -156,12 +204,6 @@ class SundanceView extends WatchUi.WatchFace {
         goldenAmMoment = null;
         goldenPmMoment = null;
         moonPhase = null;
-
-        if (is416dev) {
-            fntDataFields = Gfx.FONT_LARGE;
-        } else {
-            fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);
-        }
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -175,6 +217,24 @@ class SundanceView extends WatchUi.WatchFace {
         if (dc has :clearClip) {    // Clear any partial update clipping.
             dc.clearClip();
         }
+
+        // base objects reload
+        activityInfo = Activity.getActivityInfo();
+
+        // field font setting
+        // if (is416dev) {
+        //     fntDataFields = Gfx.FONT_LARGE;
+        // } else {
+            // fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);
+        if (App.getApp().getProperty("UseBiggerFontDataFields")) {
+            fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFieldsX);
+            dataFieldsYCentering = 3;
+        } else {
+            fntDataFields = WatchUi.loadResource(Rez.Fonts.fntDataFields);
+            dataFieldsYCentering = 0;
+        }
+        // }
+        useBezelAsDial = App.getApp().getProperty("UseWatchBezel");
 
         var now = Time.now();
         var today = Gregorian.info(now, Time.FORMAT_MEDIUM);
@@ -208,7 +268,7 @@ class SundanceView extends WatchUi.WatchFace {
             themeColor = App.getApp().getProperty("DaylightProgess");
         }
 
-        drawDial(dc, today);                                    // main dial
+        drawDial(dc, today);                                // main dial
         if (App.getApp().getProperty("ShowFullDial")) {     // subdial small numbers
             drawNrDial(dc);
         }
@@ -363,8 +423,10 @@ class SundanceView extends WatchUi.WatchFace {
             case 1:
             dc.setPenWidth(App.getApp().getProperty("CurrentTimePointerWidth"));
             var timeCoef = (time.hour + (time.min.toFloat() / 60)) * 15;
-            var timeStart = 272 - timeCoef; // 270 was corrected better placing of current time holder
-            var timeEnd = 268 - timeCoef;   // 270 was corrected better placing of current time holder
+            // 270 was corrected better placing of current time holder
+            var timeStart = 272 - timeCoef + (useBezelAsDial ? 180 : 0); 
+            // 270 was corrected better placing of current time holder
+            var timeEnd = 268 - timeCoef + (useBezelAsDial ? 180 : 0);   
             dc.setColor(pointerColor, Gfx.COLOR_TRANSPARENT);
             dc.drawArc(halfWidth, halfWidth, halfWidth - 2, Gfx.ARC_CLOCKWISE, timeStart, timeEnd);
             break;
@@ -451,7 +513,7 @@ class SundanceView extends WatchUi.WatchFace {
         if (activityInfo.currentHeartRate != null) {
             hr = activityInfo.currentHeartRate.toString();
         }
-        dc.drawText(xPos - 19, yPos, fntDataFields, hr, Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(xPos - 19, yPos - dataFieldsYCentering, fntDataFields, hr, Gfx.TEXT_JUSTIFY_LEFT);
     }
 
 
@@ -471,7 +533,7 @@ class SundanceView extends WatchUi.WatchFace {
             location = activityInfo.currentLocation.toRadians();
             app.setProperty("location", location);
         } else {
-            location =  app.getProperty("location");
+            location = app.getProperty("location");
         }
 
          if (location != null) {
@@ -558,10 +620,10 @@ class SundanceView extends WatchUi.WatchFace {
         dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 
         var startDecimal = momentStart.hour + (momentStart.min.toDouble() / 60);
-        var lineStart = 270 - (startDecimal * angleCoef);
+        var lineStart = 270 - (startDecimal * angleCoef) + (useBezelAsDial ? 180 : 0);
 
         var endDecimal = momentEnd.hour + (momentEnd.min.toDouble() / 60);
-        var lineEnd = 270 - (endDecimal * angleCoef);
+        var lineEnd = 270 - (endDecimal * angleCoef) + (useBezelAsDial ? 180 : 0);
 
         dc.drawArc(arcX, arcY, radius, Gfx.ARC_CLOCKWISE, lineStart, lineEnd);
     }
@@ -612,7 +674,7 @@ class SundanceView extends WatchUi.WatchFace {
                 var value = getFormattedTime(nextSunEvent.hour, nextSunEvent.min); // App.getApp().getFormattedTime(hour, min);
                 value = value[:formatted] + value[:amPm];
                 dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
-                dc.drawText(xPos + 21, yPos - 15, fntDataFields, value, Gfx.TEXT_JUSTIFY_LEFT);
+                dc.drawText(xPos + 21, yPos - 15 - dataFieldsYCentering, fntDataFields, value, Gfx.TEXT_JUSTIFY_LEFT);
             }
         }
     }
@@ -658,7 +720,7 @@ class SundanceView extends WatchUi.WatchFace {
                 value = value[:formatted] + value[:amPm];
                 dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
                 //dc.drawText(xPos + 20, yPos - 15, fntDataFields, value, Gfx.TEXT_JUSTIFY_LEFT);
-                dc.drawText(xPos + 21, yPos - 15, fntDataFields, value, Gfx.TEXT_JUSTIFY_LEFT);
+                dc.drawText(xPos + 21, yPos - 15 - dataFieldsYCentering, fntDataFields, value, Gfx.TEXT_JUSTIFY_LEFT);
             }
         }
     }
@@ -744,14 +806,24 @@ class SundanceView extends WatchUi.WatchFace {
         dc.drawLine(dc.getWidth(), halfWidth - (masterPointWid / 2), dc.getWidth() - masterPointLen, halfWidth - (masterPointWid / 2));
 
         // numbers
-        dc.drawText(halfWidth, masterPointLen - 3, Gfx.FONT_TINY, "12", Gfx.TEXT_JUSTIFY_CENTER);   // 12
-        dc.drawText(halfWidth, dc.getHeight() - Gfx.getFontHeight(Gfx.FONT_TINY) - 11, Gfx.FONT_TINY, "24", Gfx.TEXT_JUSTIFY_CENTER);   // 24
-        dc.drawText(15, secPosY, Gfx.FONT_TINY, "06", Gfx.TEXT_JUSTIFY_LEFT);   // 06
+        if (!useBezelAsDial) {
+            dc.drawText(halfWidth, masterPointLen - 3, Gfx.FONT_TINY, "12", Gfx.TEXT_JUSTIFY_CENTER);   // 12
+            dc.drawText(halfWidth, dc.getHeight() - Gfx.getFontHeight(Gfx.FONT_TINY) - 11, Gfx.FONT_TINY, "24", Gfx.TEXT_JUSTIFY_CENTER);   // 24
+            dc.drawText(15, secPosY, Gfx.FONT_TINY, "06", Gfx.TEXT_JUSTIFY_LEFT);   // 06
+        } else {
+            dc.drawText(halfWidth, masterPointLen - 3, Gfx.FONT_TINY, "24", Gfx.TEXT_JUSTIFY_CENTER);   // 24
+            dc.drawText(halfWidth, dc.getHeight() - Gfx.getFontHeight(Gfx.FONT_TINY) - 11, Gfx.FONT_TINY, "12", Gfx.TEXT_JUSTIFY_CENTER);   // 12
+            dc.drawText(15, secPosY, Gfx.FONT_TINY, "18", Gfx.TEXT_JUSTIFY_LEFT);   // 18
+        }
 
         if (App.getApp().getProperty("ShowSeconds")) {
             dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, today.sec.format("%02d"), Gfx.TEXT_JUSTIFY_RIGHT); // seconds
         } else {
-            dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, "18", Gfx.TEXT_JUSTIFY_RIGHT); // 18
+            if (!useBezelAsDial) {
+                dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, "18", Gfx.TEXT_JUSTIFY_RIGHT); // 18
+            } else {
+                dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, "06", Gfx.TEXT_JUSTIFY_RIGHT); // 06
+            }
         }
     }
 
@@ -777,52 +849,104 @@ class SundanceView extends WatchUi.WatchFace {
             if ((nr != 6) && (nr != 12) && (nr != 18) && ((nr % fullDialConfig) == 0)) {
                 // needs to do it for each number because thre is now fucnking indirection call like $$var or ${var}
                 hourValue = nr + angleToNrCorrection;
-                coords = smallDialCoordsNums.get(hourValue);
-                if (hourValue == -1) {  // 23
-                    drawDialNum(dc, coords, "23", fnt23);
-                } else if (hourValue == -2) {   // 22
-                    drawDialNum(dc, coords, "22", fnt22);
-                } else if (hourValue == -3) {   // 21
-                    drawDialNum(dc, coords, "21", fnt21);
-                } else if (hourValue == -4) {   // 20
-                    drawDialNum(dc, coords, "20", fnt20);
-                } else if (hourValue == -5) {   // 19
-                    drawDialNum(dc, coords, "19", fnt19);
-                } else if (hourValue == 1) {    
-                    drawDialNum(dc, coords, hourValue.toString(), fnt1);
-                } else if (hourValue == 2) {    
-                    drawDialNum(dc, coords, hourValue.toString(), fnt2);
-                } else if (hourValue == 3) {    
-                    drawDialNum(dc, coords, hourValue.toString(), fnt3);
-                } else if (hourValue == 4) {    
-                    drawDialNum(dc, coords, hourValue.toString(), fnt4);
-                } else if (hourValue == 5) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt5);
-                } else if (hourValue == 7) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt7);
-                } else if (hourValue == 8) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt8);
-                } else if (hourValue == 9) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt9);
-                } else if (hourValue == 10) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt10);
-                } else if (hourValue == 11) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt11);
-                } else if (hourValue == 13) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt13);
-                } else if (hourValue == 14) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt14);
-                } else if (hourValue == 15) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt15);
-                } else if (hourValue == 16) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt16);
-                } else if (hourValue == 17) {
-                    drawDialNum(dc, coords, hourValue.toString(), fnt17);
-                } 
+                coords = app.getProperty("smallDialCoordsNums").get(hourValue);
+                if (useBezelAsDial) {
+                    drawNrDialRev(dc, hourValue, coords);
+                } else {
+                    drawNrDialStan(dc, hourValue, coords);
+                }
             }
         }
     }
 
+    function drawNrDialStan(dc, hourValue, coords) {
+        if (hourValue == -1) {  // 23
+            drawDialNum(dc, coords, "23", fnt23);
+        } else if (hourValue == -2) {   // 22
+            drawDialNum(dc, coords, "22", fnt22);
+        } else if (hourValue == -3) {   // 21
+            drawDialNum(dc, coords, "21", fnt21);
+        } else if (hourValue == -4) {   // 20
+            drawDialNum(dc, coords, "20", fnt20);
+        } else if (hourValue == -5) {   // 19
+            drawDialNum(dc, coords, "19", fnt19);
+        } else if (hourValue == 1) {    
+            drawDialNum(dc, coords, hourValue.toString(), fnt1);
+        } else if (hourValue == 2) {    
+            drawDialNum(dc, coords, hourValue.toString(), fnt2);
+        } else if (hourValue == 3) {    
+            drawDialNum(dc, coords, hourValue.toString(), fnt3);
+        } else if (hourValue == 4) {    
+            drawDialNum(dc, coords, hourValue.toString(), fnt4);
+        } else if (hourValue == 5) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt5);
+        } else if (hourValue == 7) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt7);
+        } else if (hourValue == 8) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt8);
+        } else if (hourValue == 9) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt9);
+        } else if (hourValue == 10) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt10);
+        } else if (hourValue == 11) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt11);
+        } else if (hourValue == 13) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt13);
+        } else if (hourValue == 14) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt14);
+        } else if (hourValue == 15) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt15);
+        } else if (hourValue == 16) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt16);
+        } else if (hourValue == 17) {
+            drawDialNum(dc, coords, hourValue.toString(), fnt17);
+        } 
+    }
+
+    function drawNrDialRev(dc, hourValue, coords) {
+        var trueHour = (hourValue - 12).toString();
+        if (hourValue == -1) {  // 23 = 11
+            drawDialNum(dc, coords, "11", fnt11r);
+        } else if (hourValue == -2) {   // 22 = 10
+            drawDialNum(dc, coords, "10", fnt10r);
+        } else if (hourValue == -3) {   // 21 = 9
+            drawDialNum(dc, coords, "9", fnt9r);
+        } else if (hourValue == -4) {   // 20 = 8
+            drawDialNum(dc, coords, "8", fnt8r);
+        } else if (hourValue == -5) {   // 19 = 7
+            drawDialNum(dc, coords, "7", fnt7r);
+        } else if (hourValue == 1) {    
+            drawDialNum(dc, coords, "13", fnt13r);
+        } else if (hourValue == 2) {    
+            drawDialNum(dc, coords, "14", fnt14r);
+        } else if (hourValue == 3) {    
+            drawDialNum(dc, coords, "15", fnt15r);
+        } else if (hourValue == 4) {    
+            drawDialNum(dc, coords, "16", fnt16r);
+        } else if (hourValue == 5) {
+            drawDialNum(dc, coords, "17", fnt17r);
+        } else if (hourValue == 7) {
+            drawDialNum(dc, coords, "19", fnt19r);
+        } else if (hourValue == 8) {
+            drawDialNum(dc, coords, "20", fnt20r);
+        } else if (hourValue == 9) {
+            drawDialNum(dc, coords, "21", fnt21r);
+        } else if (hourValue == 10) {
+            drawDialNum(dc, coords, "22", fnt22r);
+        } else if (hourValue == 11) {
+            drawDialNum(dc, coords, "23", fnt23r);
+        } else if (hourValue == 13) {
+            drawDialNum(dc, coords, trueHour, fnt1r);
+        } else if (hourValue == 14) {
+            drawDialNum(dc, coords, trueHour, fnt2r);
+        } else if (hourValue == 15) {
+            drawDialNum(dc, coords, trueHour, fnt3r);
+        } else if (hourValue == 16) {
+            drawDialNum(dc, coords, trueHour, fnt4r);
+        } else if (hourValue == 17) {
+            drawDialNum(dc, coords, trueHour, fnt5r);
+        } 
+    }
 
     // Draw sunset or sunrice image
     function drawSun(posX, posY, dc, up, color) {
@@ -893,7 +1017,7 @@ class SundanceView extends WatchUi.WatchFace {
             stepsCount += (is240dev ? "k" : "");
         }
         //dc.drawText(posX + 22, posY, fntDataFields, stepsCount.toString(), Gfx.TEXT_JUSTIFY_LEFT);
-        dc.drawText(posX + 22, posY, fntDataFields, stepsCount.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(posX + 22, posY - dataFieldsYCentering, fntDataFields, stepsCount.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
     
     
@@ -922,7 +1046,7 @@ class SundanceView extends WatchUi.WatchFace {
         if (is280dev || (position == 1) || (position == 4))  {
             distanceKm = distanceKm.toString() + "km";
         }
-        dc.drawText(posX + 22, posY, fntDataFields, distanceKm.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(posX + 22, posY - dataFieldsYCentering, fntDataFields, distanceKm.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
 
 
@@ -944,7 +1068,7 @@ class SundanceView extends WatchUi.WatchFace {
 
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
         var info = ActivityMonitor.getInfo();
-        dc.drawText(posX + 22, posY, fntDataFields, info.floorsClimbed.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(posX + 22, posY - dataFieldsYCentering, fntDataFields, info.floorsClimbed.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
 
 
@@ -970,7 +1094,7 @@ class SundanceView extends WatchUi.WatchFace {
         if (is240dev && (caloriesCount > 999) && ((position == 2) || (position == 3))){
             caloriesCount = (caloriesCount / 1000.0).format("%.1f").toString() + "M";
         }
-        dc.drawText(posX + 20, posY, fntDataFields, caloriesCount.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(posX + 20, posY - dataFieldsYCentering, fntDataFields, caloriesCount.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
 
 
@@ -1117,7 +1241,7 @@ class SundanceView extends WatchUi.WatchFace {
             }
             batText = (app.getProperty("remainingBattery") == null ? "W8" : app.getProperty("remainingBattery").toString());
         }  
-        dc.drawText(xPos + 29 - 34, yPos, fntDataFields, batText, Gfx.TEXT_JUSTIFY_LEFT);  
+        dc.drawText(xPos + 29 - 34, yPos - dataFieldsYCentering, fntDataFields, batText, Gfx.TEXT_JUSTIFY_LEFT);  
     }
     
     
@@ -1177,7 +1301,7 @@ class SundanceView extends WatchUi.WatchFace {
         } else {
             alt = alt[:altitude];
         }
-        dc.drawText(xPos - 18, yPos, fntDataFields, alt, Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(xPos - 18, yPos - dataFieldsYCentering, fntDataFields, alt, Gfx.TEXT_JUSTIFY_LEFT);
         //dc.drawText(xPos - 18, yPos, fntDataFields, alt, Gfx.TEXT_JUSTIFY_LEFT);
 
         // coordinates correction text to mountain picture
@@ -1265,7 +1389,7 @@ class SundanceView extends WatchUi.WatchFace {
             pressure = activityInfo.ambientPressure == null ? 0 : (activityInfo.ambientPressure / 100).toNumber();
         }
         xPos -= (is218dev && ((position == 2) || (position == 3))) ? 8 : 6;
-        dc.drawText(xPos, yPos, fntDataFields, pressure.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+        dc.drawText(xPos, yPos - dataFieldsYCentering, fntDataFields, pressure.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
 
     // Draw small pressure graph based on baroFigure
@@ -1454,7 +1578,7 @@ class SundanceView extends WatchUi.WatchFace {
         // 5. Pressure is unlikely to change frequently, so there isn't the same concern with getting a "live" value,
         // compared with HR. Use SensorHistory only.
         if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getPressureHistory)) {
-            var sample = SensorHistory.getPressureHistory(null).next();
+            var sample = Toybox.SensorHistory.getPressureHistory({}).next();
             if ((sample != null) && (sample.data != null)) {
                 pressure = sample.data;
             }
@@ -1499,7 +1623,7 @@ class SundanceView extends WatchUi.WatchFace {
         var rLocal = halfWidth - daylightProgessWidth + 2;  // line in day light
         dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 
-        var secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60) + angleToNrCorrection) * 15);
+        var secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60) + angleToNrCorrection + (useBezelAsDial ? 180 :0)) * 15);
         // the top  point touching the DaylightProgessWidth
         var angleDeg = (secondTimeCoef * Math.PI) / 180;
         var trianglPointX1 = ((rLocal * Math.cos(angleDeg)) + halfWidth);
@@ -1529,7 +1653,7 @@ class SundanceView extends WatchUi.WatchFace {
         dc.setPenWidth(2);
         dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 
-        var secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60) + angleToNrCorrection) * 15);
+        var secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60) + angleToNrCorrection + (useBezelAsDial ? 180 : 0)) * 15);
         // the top  point touching the DaylightProgessWidth
         var angleDeg = (secondTimeCoef * Math.PI) / 180;
         var trianglPointX1 = ((rLocal * Math.cos(angleDeg)) + halfWidth);
@@ -1561,13 +1685,13 @@ class SundanceView extends WatchUi.WatchFace {
         
         dc.setPenWidth(daylightProgessWidth);
         var secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60)) * 15);
-        var secondTimeStart = 272 - secondTimeCoef; // 270 was corrected better placing of second time holder
-        var secondTimeEnd = 268 - secondTimeCoef;   // 270 was corrected better placing of second time holder       
+        var secondTimeStart = 272 - secondTimeCoef + (useBezelAsDial ? 180 : 0); // 270 was corrected better placing of second time holder
+        var secondTimeEnd = 268 - secondTimeCoef + (useBezelAsDial ? 180 : 0);   // 270 was corrected better placing of second time holder       
         dc.drawArc(halfWidth, halfWidth, halfWidth, Gfx.ARC_CLOCKWISE, secondTimeStart, secondTimeEnd);
         
         // the top  point touching the DaylightProgessWidth
         var secondTimeTriangleCircle = halfWidth - (daylightProgessWidth + App.getApp().getProperty("CurrentTimePointerWidth"));
-        secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60) + angleToNrCorrection) * 15);
+        secondTimeCoef = ((timeInfo.hour + (timeInfo.min.toFloat() / 60) + angleToNrCorrection + (useBezelAsDial ? 180 : 0)) * 15);
         var angleDeg = (secondTimeCoef * Math.PI) / 180;
         var trianglPointX1 = ((secondTimeTriangleCircle * Math.cos(angleDeg)) + halfWidth);
         var trianglPointY1 = ((secondTimeTriangleCircle * Math.sin(angleDeg)) + halfWidth);

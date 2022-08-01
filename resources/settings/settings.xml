@@ -158,6 +158,10 @@
         </settingConfig>
     </setting>
 
+    <setting propertyKey="@Properties.UseBiggerFontDataFields" title="@Strings.UseBiggerFontDataFieldsTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
     <setting propertyKey="@Properties.DaylightProgessWidth" title="@Strings.DaylightProgessWidthTitle">
         <settingConfig type="list">
             <listEntry value="6">@Strings.width6</listEntry>
@@ -273,6 +277,10 @@
             <listEntry value="8">@Strings.width8</listEntry>
             <listEntry value="10">@Strings.width10</listEntry>
         </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.UseWatchBezel" title="@Strings.UseWatchBezelTitle">
+        <settingConfig type="boolean" />
     </setting>
 
     <setting propertyKey="@Properties.ShowFullDial" title="@Strings.ShowFullDiaTitle">
