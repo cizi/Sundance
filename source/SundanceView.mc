@@ -24,10 +24,14 @@ class SundanceView extends WatchUi.WatchFace {
     const PRESSURE = 8;
     const NEXT_SUN_EVENT = 9;
     const SECOND_TIME = 10;
+    const SOLAR_INTENSITY = 13;
     const DISABLED = 100;
     const DISTANCE = 11;
     const BATTERY_IN_DAYS = 12;
     const PRESSURE_ARRAY_KEY = "pressure";
+    const SOLAR_INTENSITY_ARRAY_KEY = "solar";
+    const SOALR_X_STEP = 4;
+    const SOLAR_Y_STEP = 0.22;
 
     // others
     hidden var settings;
@@ -297,7 +301,14 @@ class SundanceView extends WatchUi.WatchFace {
             handlePressureHistorty(getPressure());
             app.setProperty("lastPressureLoggingTimeHistoty", today.hour);
         }
-        
+
+        // Logging solar intensity history each ten minutes only if I don't have the value already logged
+        var lastSolarLoggingTimeHistory = (app.getProperty("lastSolarLoggingTimeHistory") == null ? null : app.getProperty("lastSolarLoggingTimeHistory").toNumber());
+        if ((today.min % 10 == 0) && (today.hour.toString() + today.min.toString() != lastSolarLoggingTimeHistory)) {
+            handleSolarIntensityHistory(System.getSystemStats().solarIntensity);
+            app.setProperty("lastSolarLoggingTimeHistory", today.hour.toString() + today.min.toString());
+        }
+
         // second time calculation and dial drawing if any
         var secondTime = calculateSecondTime(new Time.Moment(now.value()));
         if (App.getApp().getProperty("ShowSecondTimeOnDial")) {
@@ -414,6 +425,10 @@ class SundanceView extends WatchUi.WatchFace {
             case SECOND_TIME:
             drawSecondTime(fieldCors[0], fieldCors[1], dc, secondTime, position);
             break;
+
+            case SOLAR_INTENSITY:
+            drawSolarIntensity(fieldCors[0], fieldCors[1], dc, today, position);
+            break;
         }
     }
     
@@ -476,6 +491,34 @@ class SundanceView extends WatchUi.WatchFace {
         value = value[:formatted] + value[:amPm];
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
         dc.drawText(xPos, yPos, fntDataFields, value, Gfx.TEXT_JUSTIFY_CENTER);
+    }
+
+    function drawSolarIntensity(xPos, yPos, dc, today, position) {
+        var solarInt;
+        var solarIntPrev;
+        dc.setPenWidth(1);
+        dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
+        var xPosGraph = xPos - 15;
+        var yPosGraph = yPos - 4;
+        for(var sol = 6; sol > 2; sol-=1) {
+            solarInt = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + sol.toString());
+            solarInt = solarInt == null ? 0 : solarInt;
+
+            solarIntPrev = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
+            solarIntPrev = solarIntPrev == null ? 100 : solarIntPrev;
+            dc.drawLine(xPosGraph - (sol * SOALR_X_STEP).toNumber(), yPosGraph + (SOLAR_Y_STEP * solarInt).toNumber(), xPosGraph - ((sol - 1) * SOALR_X_STEP).toNumber(), yPosGraph + (SOLAR_Y_STEP * solarIntPrev).toNumber());
+        
+            // System.println(solarInt);
+            // System.println(solarIntPrev);
+            // System.println("solarIntPrev");
+        }
+        var solar1 = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + "0");   // always need a current value which is saved on position 0
+        solar1 = solar1 == null ? 0 : solar1;
+        System.println(solar1);
+        dc.drawLine(xPosGraph - (2 * SOALR_X_STEP), yPosGraph + (SOLAR_Y_STEP * solarIntPrev).toNumber(), xPosGraph, yPosGraph + (SOLAR_Y_STEP * solar1).toNumber());
+
+        dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
     }
 
     // Load or refresh the sun times
@@ -1613,6 +1656,27 @@ class SundanceView extends WatchUi.WatchFace {
             }
         }
         app.setProperty("pressure0", pressureValue);
+    }
+
+    function handleSolarIntensityHistory(solarIntensityValue) {
+        var solars = [];
+
+        // var solars = ["solar0" ....  "solar6"];
+        for(var period = 0; period <= 6; period+=1) {
+            solars.add(SOLAR_INTENSITY_ARRAY_KEY + period.toString());
+        }
+
+        var preindex = -1;
+        for(var solar = solars.size(); solar > 1; solar-=1) {
+            preindex = solar - 2;
+            if (preindex >= 0) {
+                if (app.getProperty(solars[preindex]) == null) {
+                    app.setProperty(solars[preindex], solarIntensityValue);
+                }
+                app.setProperty(solars[solar - 1], app.getProperty(solars[preindex]));             
+            }
+        }
+        app.setProperty(SOLAR_INTENSITY_ARRAY_KEY + "0", solarIntensityValue);
     }
 
 

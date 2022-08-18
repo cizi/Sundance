@@ -164,23 +164,23 @@ class UiCalc {
             numCoords.put(hourValue, [pointX.toNumber() - 3, pointY.toNumber() - 5, pointX.toNumber() + 8, pointY.toNumber() - 8]);
             break;
 
-            case 13:
-            numCoords.put(hourValue, [pointX.toNumber(), pointY.toNumber() - 7, pointX.toNumber(), pointY.toNumber() - 4]);
+            case 13:  // 6
+            numCoords.put(hourValue, [pointX.toNumber(), pointY.toNumber() - 7]);
             break;
 
-            case 14:
-            numCoords.put(hourValue, [pointX.toNumber() - 3, pointY.toNumber() - 6, pointX.toNumber(), pointY.toNumber() - 3]);
+            case 14:  // 7
+            numCoords.put(hourValue, [pointX.toNumber() - 3, pointY.toNumber() - 6]);
             break;
 
-            case 15:
-            numCoords.put(hourValue, [pointX.toNumber() - 4, pointY.toNumber() - 7, pointX.toNumber(), pointY.toNumber() - 5]);
+            case 15:  // 8
+            numCoords.put(hourValue, [pointX.toNumber() - 4, pointY.toNumber() - 7]);
             break;
 
-            case 16:
-            numCoords.put(hourValue, [pointX.toNumber() - 4, pointY.toNumber() - 7, pointX.toNumber() - 1, pointY.toNumber() - 5]);
+            case 16:  // 9
+            numCoords.put(hourValue, [pointX.toNumber() - 7, pointY.toNumber() - 10]);
             break;
 
-            case 17:
+            case 17:  // 10
             numCoords.put(hourValue, [pointX.toNumber() - 4, pointY.toNumber() - 8, pointX.toNumber() - 3, pointY.toNumber() - 6]);
             break;
 
@@ -193,15 +193,15 @@ class UiCalc {
             break;
 
             case -3:	// 21 = 9
-            numCoords.put(hourValue, [pointX.toNumber() - 1, pointY.toNumber() - 13, pointX.toNumber() + 1, pointY.toNumber() - 18]);
+            numCoords.put(hourValue, [pointX.toNumber() - 1, pointY.toNumber() - 13]);
             break;
 
             case -4:	// 20 = 8
-            numCoords.put(hourValue, [pointX.toNumber() - 4, pointY.toNumber() - 12, pointX.toNumber(), pointY.toNumber() - 19]);
+            numCoords.put(hourValue, [pointX.toNumber() - 4, pointY.toNumber() - 12]);
             break;
 
             case -5:	// 19 = 7
-            numCoords.put(hourValue, [pointX.toNumber() - 3, pointY.toNumber() - 10, pointX.toNumber() - 3, pointY.toNumber() - 18]);
+            numCoords.put(hourValue, [pointX.toNumber() - 3, pointY.toNumber() - 10]);
             break;
           }
         }
