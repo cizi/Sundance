@@ -304,7 +304,7 @@ class SundanceView extends WatchUi.WatchFace {
 
         // Logging solar intensity history each ten minutes only if I don't have the value already logged
         var lastSolarLoggingTimeHistory = (app.getProperty("lastSolarLoggingTimeHistory") == null ? null : app.getProperty("lastSolarLoggingTimeHistory").toNumber());
-        if ((today.min % 10 == 0) && (today.hour.toString() + today.min.toString() != lastSolarLoggingTimeHistory)) {
+        if ((today.min % 5 == 0) && (today.hour.toString() + today.min.toString() != lastSolarLoggingTimeHistory)) {
             handleSolarIntensityHistory(System.getSystemStats().solarIntensity);
             app.setProperty("lastSolarLoggingTimeHistory", today.hour.toString() + today.min.toString());
         }
@@ -494,9 +494,17 @@ class SundanceView extends WatchUi.WatchFace {
     }
 
     function drawSolarIntensity(xPos, yPos, dc, today, position) {
+         if (position == 1) {
+            xPos += 32;
+            yPos -= 17;
+        }
+        if (position == 2) {
+            xPos += 42;
+        }
+
         var solarInt;
         var solarIntPrev;
-        dc.setPenWidth(1);
+        dc.setPenWidth(2);
         dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
         var xPosGraph = xPos - 15;
         var yPosGraph = yPos - 4;
@@ -507,10 +515,6 @@ class SundanceView extends WatchUi.WatchFace {
             solarIntPrev = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
             solarIntPrev = solarIntPrev == null ? 100 : solarIntPrev;
             dc.drawLine(xPosGraph - (sol * SOALR_X_STEP).toNumber(), yPosGraph + (SOLAR_Y_STEP * solarInt).toNumber(), xPosGraph - ((sol - 1) * SOALR_X_STEP).toNumber(), yPosGraph + (SOLAR_Y_STEP * solarIntPrev).toNumber());
-        
-            // System.println(solarInt);
-            // System.println(solarIntPrev);
-            // System.println("solarIntPrev");
         }
         var solar1 = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + "0");   // always need a current value which is saved on position 0
         solar1 = solar1 == null ? 0 : solar1;
@@ -1662,6 +1666,7 @@ class SundanceView extends WatchUi.WatchFace {
         var solars = [];
 
         // var solars = ["solar0" ....  "solar6"];
+        // var solarMock = [20, 45, 30, 80, 0, 100, 90, 67]; MOCK
         for(var period = 0; period <= 6; period+=1) {
             solars.add(SOLAR_INTENSITY_ARRAY_KEY + period.toString());
         }
@@ -1672,8 +1677,10 @@ class SundanceView extends WatchUi.WatchFace {
             if (preindex >= 0) {
                 if (app.getProperty(solars[preindex]) == null) {
                     app.setProperty(solars[preindex], solarIntensityValue);
+                    //app.setProperty(solars[preindex], solarMock[solar]); MOCK
                 }
                 app.setProperty(solars[solar - 1], app.getProperty(solars[preindex]));             
+                //app.setProperty(solars[solar - 1], solarMock[preindex]);    MOCK     
             }
         }
         app.setProperty(SOLAR_INTENSITY_ARRAY_KEY + "0", solarIntensityValue);
