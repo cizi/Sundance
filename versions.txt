@@ -1,3 +1,8 @@
+Vesrion 5.6
+- Trying to fix crashes on non solar watches
+- Solar intensity data field fix (I hope)
+Version 5.5
+- Added solar intensity as an data field option (beta - see description)
 Version 5.4
 - Code optimalization
 - Added dial hours for Tactix and Decent MK2s

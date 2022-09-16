@@ -302,11 +302,16 @@ class SundanceView extends WatchUi.WatchFace {
             app.setProperty("lastPressureLoggingTimeHistoty", today.hour);
         }
 
-        // Logging solar intensity history each ten minutes only if I don't have the value already logged
+        // Logging solar intensity history each five minutes only if I don't have the value already logged
         var lastSolarLoggingTimeHistory = (app.getProperty("lastSolarLoggingTimeHistory") == null ? null : app.getProperty("lastSolarLoggingTimeHistory").toNumber());
-        if ((today.min % 5 == 0) && (today.hour.toString() + today.min.toString() != lastSolarLoggingTimeHistory)) {
-            handleSolarIntensityHistory(System.getSystemStats().solarIntensity);
-            app.setProperty("lastSolarLoggingTimeHistory", today.hour.toString() + today.min.toString());
+        if ((today.min % 5 == 0) && ((today.hour * 60 + today.min).toNumber() != lastSolarLoggingTimeHistory)) {
+            var solarIntensityCurrent = 0;
+            if (System.getSystemStats() has :solarIntensity) {
+                solarIntensityCurrent = System.getSystemStats().solarIntensity.toNumber();
+                solarIntensityCurrent = solarIntensityCurrent < 0 ? 0 : solarIntensityCurrent;
+            }
+            handleSolarIntensityHistory(solarIntensityCurrent);
+            app.setProperty("lastSolarLoggingTimeHistory", (today.hour * 60 + today.min).toNumber());
         }
 
         // second time calculation and dial drawing if any
@@ -494,6 +499,7 @@ class SundanceView extends WatchUi.WatchFace {
     }
 
     function drawSolarIntensity(xPos, yPos, dc, today, position) {
+        yPos -= 4;
          if (position == 1) {
             xPos += 32;
             yPos -= 17;
@@ -502,27 +508,29 @@ class SundanceView extends WatchUi.WatchFace {
             xPos += 42;
         }
 
-        var solarInt;
-        var solarIntPrev;
-        dc.setPenWidth(2);
-        dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
-        var xPosGraph = xPos - 15;
-        var yPosGraph = yPos - 4;
-        for(var sol = 6; sol > 2; sol-=1) {
-            solarInt = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + sol.toString());
-            solarInt = solarInt == null ? 0 : solarInt;
-
-            solarIntPrev = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
-            solarIntPrev = solarIntPrev == null ? 100 : solarIntPrev;
-            dc.drawLine(xPosGraph - (sol * SOALR_X_STEP).toNumber(), yPosGraph + (SOLAR_Y_STEP * solarInt).toNumber(), xPosGraph - ((sol - 1) * SOALR_X_STEP).toNumber(), yPosGraph + (SOLAR_Y_STEP * solarIntPrev).toNumber());
-        }
         var solar1 = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + "0");   // always need a current value which is saved on position 0
-        solar1 = solar1 == null ? 0 : solar1;
-        System.println(solar1);
-        dc.drawLine(xPosGraph - (2 * SOALR_X_STEP), yPosGraph + (SOLAR_Y_STEP * solarIntPrev).toNumber(), xPosGraph, yPosGraph + (SOLAR_Y_STEP * solar1).toNumber());
+        if (solar1 == null) {
+            dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(xPos, yPos, fntDataFields, "W8", Gfx.TEXT_JUSTIFY_CENTER);
+        } else {
+            var solarInt;
+            var solarIntPrev;
+            dc.setPenWidth(2);
+            dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
+            var xPosGraph = xPos - 15;
+            var yPosGraph = yPos - 4;
+            for(var sol = 6; sol > 2; sol-=1) {
+                solarInt = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + sol.toString());
 
-        dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
-        dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
+                solarIntPrev = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
+                dc.drawLine(xPosGraph - (sol * SOALR_X_STEP).toNumber(), yPosGraph - (SOLAR_Y_STEP * (solarInt - 100)).toNumber(), xPosGraph - ((sol - 1) * SOALR_X_STEP).toNumber(), yPosGraph - (SOLAR_Y_STEP * (solarIntPrev - 100)).toNumber());
+            }
+            //System.println(solar1);
+            dc.drawLine(xPosGraph - (2 * SOALR_X_STEP), yPosGraph - (SOLAR_Y_STEP * (solarIntPrev - 100)).toNumber(), xPosGraph, yPosGraph - (SOLAR_Y_STEP * (solar1 - 100)).toNumber());
+
+            dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     // Load or refresh the sun times
