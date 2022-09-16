@@ -499,9 +499,10 @@ class SundanceView extends WatchUi.WatchFace {
     }
 
     function drawSolarIntensity(xPos, yPos, dc, today, position) {
+        yPos -= 1;
         if (position == 1) {
             xPos += 32;
-            yPos -= 21;
+            yPos -= 19;
         }
         if (position == 2) {
             xPos += 42;
@@ -514,18 +515,19 @@ class SundanceView extends WatchUi.WatchFace {
         } else {
             var solarInt;
             var solarIntPrev;
+            var sol;
             dc.setPenWidth(2);
             dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
             var xPosGraph = xPos - 15;
-            var yPosGraph = yPos + 20;
-            for(var sol = 6; sol > 2; sol-=1) {
+            var yPosGraph = yPos + 21;
+            for(sol = 6; sol > 1; sol-=1) {
                 solarInt = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + sol.toString());
 
                 solarIntPrev = app.getProperty(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
                 dc.drawLine(xPosGraph - (sol * SOALR_X_STEP).toNumber(), yPosGraph - (SOLAR_Y_STEP * solarInt).toNumber(), xPosGraph - ((sol - 1) * SOALR_X_STEP).toNumber(), yPosGraph - (SOLAR_Y_STEP * solarIntPrev).toNumber());
             }
             //System.println(solar1);
-            dc.drawLine(xPosGraph - (2 * SOALR_X_STEP), yPosGraph - (SOLAR_Y_STEP * solarIntPrev).toNumber(), xPosGraph, yPosGraph - (SOLAR_Y_STEP * solar1).toNumber());
+            dc.drawLine(xPosGraph - (sol * SOALR_X_STEP), yPosGraph - (SOLAR_Y_STEP * solarIntPrev).toNumber(), xPosGraph, yPosGraph - (SOLAR_Y_STEP * solar1).toNumber());
 
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
             dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
