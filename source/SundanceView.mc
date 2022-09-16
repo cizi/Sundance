@@ -310,7 +310,6 @@ class SundanceView extends WatchUi.WatchFace {
                 solarIntensityCurrent = System.getSystemStats().solarIntensity.toNumber();
                 solarIntensityCurrent = solarIntensityCurrent < 0 ? 0 : solarIntensityCurrent;
             }
-            System.println(today.min.toString() + "loging solar history");
             handleSolarIntensityHistory(solarIntensityCurrent);
             app.setProperty("lastSolarLoggingTimeHistory", today.min);
         }
