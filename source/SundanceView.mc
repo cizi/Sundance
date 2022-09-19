@@ -304,10 +304,10 @@ class SundanceView extends WatchUi.WatchFace {
 
         // Logging solar intensity history each five minutes only if I don't have the value already logged
         var lastSolarLoggingTimeHistory = (app.getProperty("lastSolarLoggingTimeHistory") == null ? null : app.getProperty("lastSolarLoggingTimeHistory").toNumber());
-        if ((today.min % 5 == 0) && (today.min != lastSolarLoggingTimeHistory)) {
+        if ((today.min % App.getApp().getProperty("SolarIntensityPeriod").toNumber() == 0) && (today.min != lastSolarLoggingTimeHistory)) {
             var solarIntensityCurrent = 0;
             if (System.getSystemStats() has :solarIntensity) {
-                solarIntensityCurrent = System.getSystemStats().solarIntensity.toNumber();
+                solarIntensityCurrent = System.getSystemStats().solarIntensity == null ? 0 : System.getSystemStats().solarIntensity.toNumber();
                 solarIntensityCurrent = solarIntensityCurrent < 0 ? 0 : solarIntensityCurrent;
             }
             handleSolarIntensityHistory(solarIntensityCurrent);

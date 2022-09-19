@@ -47,5 +47,7 @@
     <property id="PressureGraphBorder" type="number">2</property>
     
     <property id="PressureUnit" type="number">0</property>
+
+    <property id="SolarIntensityPeriod" type="number">5</property>
  
 </properties>

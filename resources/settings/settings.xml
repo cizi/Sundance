@@ -415,7 +415,14 @@
             <listEntry value="2">@Strings.ambientPressure</listEntry>
         </settingConfig>
     </setting>
-      
+
+    <setting propertyKey="@Properties.SolarIntensityPeriod" title="@Strings.SolarIntensityPeriodTitle">
+        <settingConfig type="list">
+            <listEntry value="1">@Strings.SolarIntensityPeriod1</listEntry>
+            <listEntry value="5">@Strings.SolarIntensityPeriod5</listEntry>
+            <listEntry value="15">@Strings.SolarIntensityPeriod15</listEntry>
+        </settingConfig>
+    </setting>
 
     <setting propertyKey="@Properties.UseMilitaryFormat" title="@Strings.MilitaryFormatTitle">
         <settingConfig type="boolean" />
