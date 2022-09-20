@@ -162,7 +162,11 @@
     
     <string id="SolarIntensityPeriodTitle">Refreshing period of the solar intensity data field</string>
     <string id="SolarIntensityPeriod1">Each minute (means last 7 minutes in the graph)</string>
+    <string id="SolarIntensityPeriod2">Each 2 minutes (means last 14 minutes in the graph)</string>
+    <string id="SolarIntensityPeriod3">Each 3 minutes (means last 21 minutes in the graph)</string>
+    <string id="SolarIntensityPeriod4">Each 4 minutes (means last 28 minutes in the graph)</string>
     <string id="SolarIntensityPeriod5">Each 5 minutes (means last 35 minutes in the graph)</string>
+    <string id="SolarIntensityPeriod10">Each 10 minutes (means last 70 minutes in the graph)</string>
     <string id="SolarIntensityPeriod15">Each 15 minutes (means last 105 minutes in the graph)</string>
 
 </strings>

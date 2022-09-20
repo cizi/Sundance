@@ -353,8 +353,7 @@ class SundanceView extends WatchUi.WatchFace {
             dc.setClip(secPosX - secFontWidth, secPosY - 2, secFontWidth, secFontHeight);
             dc.setColor(frColor, bgColor);
             dc.clear();
-            var today = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-            dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, today.sec.format("%02d"), Gfx.TEXT_JUSTIFY_RIGHT); // seconds
+            dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, System.getClockTime().sec.format("%02d"), Gfx.TEXT_JUSTIFY_RIGHT); // seconds
         }
     }
 
@@ -530,7 +529,11 @@ class SundanceView extends WatchUi.WatchFace {
             dc.drawLine(xPosGraph - (sol * SOALR_X_STEP), yPosGraph - (SOLAR_Y_STEP * solarIntPrev).toNumber(), xPosGraph, yPosGraph - (SOLAR_Y_STEP * solar1).toNumber());
 
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
+            if (solar1 > 9) {
+                dc.drawText(xPos + 2, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
+            } else {
+                dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
+            }
         }
     }
 

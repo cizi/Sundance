@@ -419,7 +419,11 @@
     <setting propertyKey="@Properties.SolarIntensityPeriod" title="@Strings.SolarIntensityPeriodTitle">
         <settingConfig type="list">
             <listEntry value="1">@Strings.SolarIntensityPeriod1</listEntry>
+            <listEntry value="2">@Strings.SolarIntensityPeriod2</listEntry>
+            <listEntry value="3">@Strings.SolarIntensityPeriod3</listEntry>
+            <listEntry value="4">@Strings.SolarIntensityPeriod4</listEntry>
             <listEntry value="5">@Strings.SolarIntensityPeriod5</listEntry>
+            <listEntry value="10">@Strings.SolarIntensityPeriod10</listEntry>
             <listEntry value="15">@Strings.SolarIntensityPeriod15</listEntry>
         </settingConfig>
     </setting>
