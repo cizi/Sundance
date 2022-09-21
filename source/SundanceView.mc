@@ -10,7 +10,12 @@ using Toybox.Activity;
 using Toybox.ActivityMonitor;
 using Toybox.SensorHistory;
 
+var do1hz = false;
+
 class SundanceView extends WatchUi.WatchFace {
+    // low power mode
+    var canDo1hz = false;
+	var inLowPower = true;
 
     // const for settings
     const MOON_PHASE = 0;
@@ -222,6 +227,10 @@ class SundanceView extends WatchUi.WatchFace {
             dc.clearClip();
         }
 
+        // see if 1hz is possible and wanted
+        do1hz = (Toybox.WatchUi.WatchFace has :onPartialUpdate) && App.getApp().getProperty("ShowSeconds");
+        canDo1hz = do1hz;
+
         // base objects reload
         activityInfo = Activity.getActivityInfo();
 
@@ -349,11 +358,8 @@ class SundanceView extends WatchUi.WatchFace {
 
 
     function onPartialUpdate(dc) {
-        if (App.getApp().getProperty("ShowSeconds")) {
-            dc.setClip(secPosX - secFontWidth, secPosY - 2, secFontWidth, secFontHeight);
-            dc.setColor(frColor, bgColor);
-            dc.clear();
-            dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, System.getClockTime().sec.format("%02d"), Gfx.TEXT_JUSTIFY_RIGHT); // seconds
+        if (canDo1hz) {
+            doSeconds(secPosX, secPosY, dc, System.getClockTime(), true);
         }
     }
 
@@ -366,11 +372,21 @@ class SundanceView extends WatchUi.WatchFace {
 
     // The user has just looked at their watch. Timers and animations may be started here.
     function onExitSleep() {
-
+        inLowPower = false;
+    	//if you are doing 1hz, there's no reason to do the Ui.reqestUpdate()
+    	// (see note below too)
+    	if (!do1hz) {
+            Toybox.WatchUi.requestUpdate();
+        } 
     }
 
     // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() {
+        inLowPower = true;
+    	// and if you do it here, you may see "jittery seconds" when the watch face drops back to low power mode
+    	if (!do1hz) {
+            Toybox.WatchUi.requestUpdate();
+        } 
     }
     
     
@@ -875,8 +891,8 @@ class SundanceView extends WatchUi.WatchFace {
             dc.drawText(15, secPosY, Gfx.FONT_TINY, "18", Gfx.TEXT_JUSTIFY_LEFT);   // 18
         }
 
-        if (App.getApp().getProperty("ShowSeconds")) {
-            dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, today.sec.format("%02d"), Gfx.TEXT_JUSTIFY_RIGHT); // seconds
+        if (canDo1hz) {
+            doSeconds(secPosX, secPosY, dc, today, false);
         } else {
             if (!useBezelAsDial) {
                 dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, "18", Gfx.TEXT_JUSTIFY_RIGHT); // 18
@@ -884,6 +900,16 @@ class SundanceView extends WatchUi.WatchFace {
                 dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, "06", Gfx.TEXT_JUSTIFY_RIGHT); // 06
             }
         }
+    }
+
+    function doSeconds(secPosX, secPosY, dc, today, isPartial) {
+        if (isPartial) {
+            dc.setClip(secPosX - secFontWidth, secPosY - 2, secFontWidth, secFontHeight);
+            dc.setColor(frColor, bgColor);
+            dc.clear();
+        }
+
+        dc.drawText(secPosX, secPosY, Gfx.FONT_TINY, today.sec.format("%02d"), Gfx.TEXT_JUSTIFY_RIGHT); // seconds
     }
 
     // draw the by params

@@ -1,3 +1,6 @@
+Version 6.0
+- Seconds fixed
+- More time log options for solar intensity graph
 Version 5.9
 - Added logging time options for solar intensity graph
 - Fixing crashing issue in the non-solar watch version (I hope)
