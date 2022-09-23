@@ -90,6 +90,7 @@
     <string id="ShowConnectionTitle">Show connection indicator</string>
     <string id="ShowNotificationTitle">Show notification indicator</string>
     <string id="SolarIntensity">Solar intensity</string>
+    <string id="Weather">Weather forecast</string>
     <string id="OptionDisabled">Disabled</string>
 
     <string id="SmallHoursIndicatorSizeTitle">Small hour indicators size</string>

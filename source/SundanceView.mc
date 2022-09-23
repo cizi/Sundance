@@ -9,13 +9,14 @@ using Toybox.Math;
 using Toybox.Activity;
 using Toybox.ActivityMonitor;
 using Toybox.SensorHistory;
+using Toybox.Weather;
 
 var do1hz = false;
 
 class SundanceView extends WatchUi.WatchFace {
     // low power mode
     var canDo1hz = false;
-	var inLowPower = true;
+	// var inLowPower = true;
 
     // const for settings
     const MOON_PHASE = 0;
@@ -30,6 +31,7 @@ class SundanceView extends WatchUi.WatchFace {
     const NEXT_SUN_EVENT = 9;
     const SECOND_TIME = 10;
     const SOLAR_INTENSITY = 13;
+    const WEATHER = 14;
     const DISABLED = 100;
     const DISTANCE = 11;
     const BATTERY_IN_DAYS = 12;
@@ -115,12 +117,17 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var fntIcons = null;
     hidden var fntDataFields = null;
     hidden var useBezelAsDial = null;
+    hidden var fntWeather = null;
 
     hidden var halfWidth = null;
     hidden var field1 = null;
     hidden var field2 = null;
     hidden var field3 = null;
     hidden var field4 = null;
+
+    hidden var weatherIcons;
+    var weatherIcon = null; 
+    var weatherTemp = "--";
 
     function initialize() {
         WatchFace.initialize();
@@ -171,6 +178,81 @@ class SundanceView extends WatchUi.WatchFace {
         fnt23r = WatchUi.loadResource(Rez.Fonts.fntSd23_r);
 
         fntIcons = WatchUi.loadResource(Rez.Fonts.fntIcons);
+        fntWeather = WatchUi.loadResource(Rez.Fonts.fntWeather);
+
+        // "A" // storm
+        // "B" // rain heavy
+        // "C" // cloudy with sun
+        // "D" // snow flake
+        // "E" // tempreture low
+        // "F" // cloudy with wind
+        // "G" // cloudy with moon
+        // "H" // tempreture high
+        // "I" // clear sky moon
+        // "J" // umbrela
+        // "K" // storm with rain
+        // "L" // rain with cloud (small drops)
+        // "M" // rain with cloud (three big drops)
+        // "N" // sun
+        // "O" // two clouds
+        // "P" // one cloud
+        weatherIcons = {
+            0 => "N", 
+            1 => "C", 
+            2 => "O", 
+            3 => "M", 
+            4 => "D", 
+            5 => "F", 
+            6 => "A", 
+            7 => "D", 
+            8 => "F", 
+            9 => "F", 
+            10 => "B", 
+            11 => "L", 
+            12 => "K", 
+            13 => "K", 
+            14 => "L", 
+            15 => "B", 
+            16 => "D", 
+            17 => "D", 
+            18 => "D", 
+            19 => "D", 
+            20 => "O", 
+            21 => "D", 
+            22 => "C", 
+            23 => "C", 
+            24 => "L", 
+            25 => "M", 
+            26 => "M", 
+            27 => "L", 
+            28 => "K", 
+            29 => "F", 
+            30 => "F", 
+            31 => "L", 
+            32 => "A", 
+            33 => "F", 
+            34 => "D", 
+            35 => "D", 
+            36 => "A", 
+            37 => "A", 
+            38 => "A", 
+            39 => "F", 
+            40 => "C", 
+            41 => "A", 
+            42 => "A", 
+            43 => "E", 
+            44 => "E", 
+            45 => "L", 
+            46 => "E", 
+            47 => "E", 
+            48 => "D", 
+            49 => "E", 
+            50 => "D", 
+            51 => "D", 
+            52 => "O", 
+            53 => "-", 
+        };
+
     }
 
     // Load your resources here
@@ -323,6 +405,13 @@ class SundanceView extends WatchUi.WatchFace {
             app.setProperty("lastSolarLoggingTimeHistory", today.min);
         }
 
+        // Logging pressure history each hour and only if I don't have the value already logged
+        var lastWeatherCheck = (app.getProperty("lastWeatherCheck") == null ? null : app.getProperty("lastWeatherCheck").toNumber());
+        if (((today.min % 15 == 0) && (today.min != lastWeatherCheck)) || weatherIcon == null) {
+            handleWeather();
+            app.setProperty("lastWeatherCheck", today.min);
+        }
+
         // second time calculation and dial drawing if any
         var secondTime = calculateSecondTime(new Time.Moment(now.value()));
         if (App.getApp().getProperty("ShowSecondTimeOnDial")) {
@@ -372,21 +461,21 @@ class SundanceView extends WatchUi.WatchFace {
 
     // The user has just looked at their watch. Timers and animations may be started here.
     function onExitSleep() {
-        inLowPower = false;
+        // inLowPower = false;
     	//if you are doing 1hz, there's no reason to do the Ui.reqestUpdate()
     	// (see note below too)
-    	if (!do1hz) {
-            Toybox.WatchUi.requestUpdate();
-        } 
+    	//if (!do1hz) {
+        //    Toybox.WatchUi.requestUpdate();
+        //} 
     }
 
     // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() {
-        inLowPower = true;
+        // inLowPower = true;
     	// and if you do it here, you may see "jittery seconds" when the watch face drops back to low power mode
-    	if (!do1hz) {
-            Toybox.WatchUi.requestUpdate();
-        } 
+    	// if (!do1hz) {
+        //    Toybox.WatchUi.requestUpdate();
+        //} 
     }
     
     
@@ -448,6 +537,10 @@ class SundanceView extends WatchUi.WatchFace {
 
             case SOLAR_INTENSITY:
             drawSolarIntensity(fieldCors[0], fieldCors[1], dc, today, position);
+            break;
+
+            case WEATHER:
+            drawWeather(fieldCors[0], fieldCors[1], dc, today, position);
             break;
         }
     }
@@ -545,11 +638,53 @@ class SundanceView extends WatchUi.WatchFace {
             dc.drawLine(xPosGraph - (sol * SOALR_X_STEP), yPosGraph - (SOLAR_Y_STEP * solarIntPrev).toNumber(), xPosGraph, yPosGraph - (SOLAR_Y_STEP * solar1).toNumber());
 
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
-            if (solar1 > 9) {
+            if (solar1 == 100) {
+                dc.drawText(xPos + 4, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
+            } else if (solar1 > 9) {
                 dc.drawText(xPos + 2, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
             } else {
                 dc.drawText(xPos, yPos, fntDataFields, solar1, Gfx.TEXT_JUSTIFY_CENTER);
             }
+        }
+    }
+
+    function drawWeather(xPos, yPos, dc, today, position) {
+        if (position == 1) {
+            xPos += 44;
+            yPos -= 17;
+        }
+        if (position == 2) {
+            xPos += 50;
+        }
+        if (position == 3) {
+            xPos += 12;
+        }
+        if (position == 4) {
+            xPos += 14;
+        }
+
+        if ((weatherIcon != null) && (weatherIcons[weatherIcon] != null)) {
+            var degreeSignX = 0;
+            if (weatherTemp.toString().length() == 1) {
+                degreeSignX = 2;
+            } else if (weatherTemp.toString().length() == 2) {
+                degreeSignX = 4;
+            } else if (weatherTemp.toString().length() == 3) {
+                degreeSignX = 6;
+            } else if (weatherTemp.toString().length() == 4) {
+                degreeSignX = 8;
+            }
+
+            dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(xPos - 36, yPos - 4, fntWeather, weatherIcons[weatherIcon], Gfx.TEXT_JUSTIFY_CENTER);
+
+            dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
+
+            dc.setPenWidth(1);
+            dc.drawCircle(xPos + degreeSignX, yPos + 5 , 3);
+            dc.drawText(xPos - 10, yPos, fntDataFields, weatherTemp, Gfx.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.drawText(xPos - 10, yPos, fntDataFields, "--", Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -1724,6 +1859,19 @@ class SundanceView extends WatchUi.WatchFace {
         app.setProperty(SOLAR_INTENSITY_ARRAY_KEY + "0", solarIntensityValue);
     }
 
+    function handleWeather() {
+        if (Toybox has :Weather) {
+            var weatherCond = Weather.getCurrentConditions();
+            if (weatherCond != null) {
+                weatherIcon = weatherCond.condition;
+                if (settings.temperatureUnits == System.UNIT_STATUTE) {
+                    weatherTemp = ((weatherCond.temperature * (9.0 / 5)) + 32).format("%02d"); // Convert to Farenheit: ensure floating point division.
+                } else {
+                    weatherTemp = weatherCond.temperature;
+                }
+            } 
+        }    
+    }
 
     // Draw filled pointer like a trinagle to dial by the settings
     function drawPointToDialFilled(dc, color, timeInfo) {

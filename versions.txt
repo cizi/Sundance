@@ -1,3 +1,5 @@
+Version 6.1
+- Added weather as field option
 Version 6.0
 - Seconds fixed
 - More time log options for solar intensity graph

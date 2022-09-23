@@ -79,6 +79,7 @@
             <listEntry value="8">@Strings.Pressure</listEntry>
             <listEntry value="10">@Strings.SecondTime</listEntry>
             <listEntry value="13">@Strings.SolarIntensity</listEntry>
+            <listEntry value="14">@Strings.Weather</listEntry>
             <listEntry value="100">@Strings.OptionDisabled</listEntry>
         </settingConfig>
     </setting>
@@ -97,6 +98,7 @@
             <listEntry value="8">@Strings.Pressure</listEntry>
             <listEntry value="10">@Strings.SecondTime</listEntry>
             <listEntry value="13">@Strings.SolarIntensity</listEntry>
+            <listEntry value="14">@Strings.Weather</listEntry>
             <listEntry value="100">@Strings.OptionDisabled</listEntry>
         </settingConfig>
     </setting>
@@ -115,6 +117,7 @@
             <listEntry value="8">@Strings.Pressure</listEntry>
             <listEntry value="10">@Strings.SecondTime</listEntry>
             <listEntry value="13">@Strings.SolarIntensity</listEntry>
+            <listEntry value="14">@Strings.Weather</listEntry>
             <listEntry value="100">@Strings.OptionDisabled</listEntry>
         </settingConfig>
     </setting>
@@ -135,6 +138,7 @@
             <listEntry value="8">@Strings.Pressure</listEntry>
             <listEntry value="10">@Strings.SecondTime</listEntry>
             <listEntry value="13">@Strings.SolarIntensity</listEntry>
+            <listEntry value="14">@Strings.Weather</listEntry>
             <listEntry value="100">@Strings.OptionDisabled</listEntry>
         </settingConfig>
     </setting>
