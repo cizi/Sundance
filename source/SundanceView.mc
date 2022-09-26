@@ -128,6 +128,7 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var weatherIcons;
     var weatherIcon = null; 
     var weatherTemp = "--";
+    var isNight;
 
     function initialize() {
         WatchFace.initialize();
@@ -180,79 +181,89 @@ class SundanceView extends WatchUi.WatchFace {
         fntIcons = WatchUi.loadResource(Rez.Fonts.fntIcons);
         fntWeather = WatchUi.loadResource(Rez.Fonts.fntWeather);
 
-        // "A" // storm
-        // "B" // rain heavy
-        // "C" // cloudy with sun
-        // "D" // snow flake
-        // "E" // tempreture low
-        // "F" // cloudy with wind
-        // "G" // cloudy with moon
-        // "H" // tempreture high
-        // "I" // clear sky moon
-        // "J" // umbrela
-        // "K" // storm with rain
-        // "L" // rain with cloud (small drops)
-        // "M" // rain with cloud (three big drops)
-        // "N" // sun
-        // "O" // two clouds
-        // "P" // one cloud
+        // Artill weather icon
+        // "z" - sun, fog, cloud (smoke, dust, sand, haze) = 33 = 30 = 35 = 39
+        // "1" - sun (clear sky) = 0
+        // "K" - heavy rain = 15 = 26
+        // "O" - heavy snow  = 17 = 34
+        // "Q" - heavy rain snow = 19 = 50
+        // "S" - light rain snow = 18 = 7 = 21 = 44 = 47
+        // "U" - heavy rain = 15
+        // "W" - snow = 4 = 43 = 46 = 51
+        // "A" - mostly cloudy = 2 = 22
+        // "Y" - thunderstorm = 6 = 12 = 13 = 28
+        // "I" - light snow = 16
+        // "M" - light rain = 14 = 11 = 24 = 31
+        // ":" - tornado = 32 = 41 = 42
+        // "2" - partly cloudy = 1 = 23 = 40
+        // "E" - sandstorm = 37 = 38
+        // "C" - hazy = 9
+        // "Z" - fog = 8 = 29
+        // "G" - rain = 3 = 25 = 27 = 45
+        // "3" - cloudy = 20 = 52
+        // "*" - unknow = 53
+        // "/" - vocanic ash = 38
+        // "4" - two thunders (Squall) = 36
+        // "," - windy = 5 = 48
+        // "6" - moon (clear sky) = 54 my own code for night and clear sky
+        // "5" - hail = 10 = 49
         weatherIcons = {
-            0 => "N", 
-            1 => "C", 
-            2 => "O", 
-            3 => "M", 
-            4 => "D", 
-            5 => "F", 
-            6 => "A", 
-            7 => "D", 
-            8 => "F", 
-            9 => "F", 
-            10 => "B", 
-            11 => "L", 
-            12 => "K", 
-            13 => "K", 
-            14 => "L", 
-            15 => "B", 
-            16 => "D", 
-            17 => "D", 
-            18 => "D", 
-            19 => "D", 
-            20 => "O", 
-            21 => "D", 
-            22 => "C", 
-            23 => "C", 
-            24 => "L", 
-            25 => "M", 
-            26 => "M", 
-            27 => "L", 
-            28 => "K", 
-            29 => "F", 
-            30 => "F", 
-            31 => "L", 
-            32 => "A", 
-            33 => "F", 
-            34 => "D", 
-            35 => "D", 
-            36 => "A", 
-            37 => "A", 
-            38 => "A", 
-            39 => "F", 
-            40 => "C", 
-            41 => "A", 
-            42 => "A", 
-            43 => "E", 
-            44 => "E", 
-            45 => "L", 
-            46 => "E", 
-            47 => "E", 
-            48 => "D", 
-            49 => "E", 
-            50 => "D", 
-            51 => "D", 
-            52 => "O", 
-            53 => "-", 
+            0 => "1", 
+            1 => "2", 
+            2 => "A", 
+            3 => "G", 
+            4 => "W", 
+            5 => ",", 
+            6 => "Y", 
+            7 => "S", 
+            8 => "Z", 
+            9 => "C", 
+            10 => "5", 
+            11 => "M", 
+            12 => "Y", 
+            13 => "Y", 
+            14 => "M", 
+            15 => "K", 
+            16 => "I", 
+            17 => "O", 
+            18 => "S", 
+            19 => "Q", 
+            20 => "3", 
+            21 => "S", 
+            22 => "A", 
+            23 => "2", 
+            24 => "M", 
+            25 => "G", 
+            26 => "K", 
+            27 => "G", 
+            28 => "Y", 
+            29 => "Z", 
+            30 => "z", 
+            31 => "M", 
+            32 => ":", 
+            33 => "z", 
+            34 => "O", 
+            35 => "z", 
+            36 => "4", 
+            37 => "E", 
+            38 => "E", 
+            39 => "z", 
+            40 => "2", 
+            41 => ":", 
+            42 => ":", 
+            43 => "W", 
+            44 => "S", 
+            45 => "G", 
+            46 => "W", 
+            47 => "S", 
+            48 => ",", 
+            49 => "5", 
+            50 => "Q", 
+            51 => "W", 
+            52 => "3", 
+            53 => "*",
+            54 => "6", 
         };
-
     }
 
     // Load your resources here
@@ -352,7 +363,7 @@ class SundanceView extends WatchUi.WatchFace {
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
         settings = System.getDeviceSettings();
-        var isNight = checkIfNightMode(sunriseMoment, sunsetMoment, new Time.Moment(now.value()));  // needs to by firts bucause of isNight variable
+        isNight = checkIfNightMode(sunriseMoment, sunsetMoment, new Time.Moment(now.value()));  // needs to by firts bucause of isNight variable
         if (isNight) {
             frColor = 0x000000;
             bgColor = 0xFFFFFF;
@@ -386,30 +397,51 @@ class SundanceView extends WatchUi.WatchFace {
             dc.drawText(halfWidth + moonCentering, dateY, Gfx.FONT_TINY, dateString, Gfx.TEXT_JUSTIFY_CENTER);
         }
         
-        // Logging pressure history each hour and only if I don't have the value already logged
-        var lastPressureLoggingTimeHistoty = (app.getProperty("lastPressureLoggingTimeHistoty") == null ? null : app.getProperty("lastPressureLoggingTimeHistoty").toNumber());
-        if ((today.min == 0) && (today.hour != lastPressureLoggingTimeHistoty)) {
-            handlePressureHistorty(getPressure());
-            app.setProperty("lastPressureLoggingTimeHistoty", today.hour);
-        }
-
-        // Logging solar intensity history each five minutes only if I don't have the value already logged
-        var lastSolarLoggingTimeHistory = (app.getProperty("lastSolarLoggingTimeHistory") == null ? null : app.getProperty("lastSolarLoggingTimeHistory").toNumber());
-        if ((today.min % App.getApp().getProperty("SolarIntensityPeriod").toNumber() == 0) && (today.min != lastSolarLoggingTimeHistory)) {
-            var solarIntensityCurrent = 0;
-            if (System.getSystemStats() has :solarIntensity) {
-                solarIntensityCurrent = System.getSystemStats().solarIntensity == null ? 0 : System.getSystemStats().solarIntensity.toNumber();
-                solarIntensityCurrent = solarIntensityCurrent < 0 ? 0 : solarIntensityCurrent;
+        if (
+            (App.getApp().getProperty("Opt1") == PRESSURE) ||
+            (App.getApp().getProperty("Opt2") == PRESSURE) ||
+            (App.getApp().getProperty("Opt3") == PRESSURE) ||
+            (App.getApp().getProperty("Opt4") == PRESSURE)
+        ) {
+            // Logging pressure history each hour and only if I don't have the value already logged
+            var lastPressureLoggingTimeHistoty = (app.getProperty("lastPressureLoggingTimeHistoty") == null ? null : app.getProperty("lastPressureLoggingTimeHistoty").toNumber());
+            if ((today.min == 0) && (today.hour != lastPressureLoggingTimeHistoty)) {
+                handlePressureHistorty(getPressure());
+                app.setProperty("lastPressureLoggingTimeHistoty", today.hour);
             }
-            handleSolarIntensityHistory(solarIntensityCurrent);
-            app.setProperty("lastSolarLoggingTimeHistory", today.min);
         }
 
-        // Logging pressure history each hour and only if I don't have the value already logged
-        var lastWeatherCheck = (app.getProperty("lastWeatherCheck") == null ? null : app.getProperty("lastWeatherCheck").toNumber());
-        if (((today.min % 15 == 0) && (today.min != lastWeatherCheck)) || weatherIcon == null) {
-            handleWeather();
-            app.setProperty("lastWeatherCheck", today.min);
+        if (
+            (App.getApp().getProperty("Opt1") == SOLAR_INTENSITY) ||
+            (App.getApp().getProperty("Opt2") == SOLAR_INTENSITY) ||
+            (App.getApp().getProperty("Opt3") == SOLAR_INTENSITY) ||
+            (App.getApp().getProperty("Opt4") == SOLAR_INTENSITY)
+        ) {
+            // Logging solar intensity history each five minutes only if I don't have the value already logged
+            var lastSolarLoggingTimeHistory = (app.getProperty("lastSolarLoggingTimeHistory") == null ? null : app.getProperty("lastSolarLoggingTimeHistory").toNumber());
+            if ((today.min % App.getApp().getProperty("SolarIntensityPeriod").toNumber() == 0) && (today.min != lastSolarLoggingTimeHistory)) {
+                var solarIntensityCurrent = 0;
+                if (System.getSystemStats() has :solarIntensity) {
+                    solarIntensityCurrent = System.getSystemStats().solarIntensity == null ? 0 : System.getSystemStats().solarIntensity.toNumber();
+                    solarIntensityCurrent = solarIntensityCurrent < 0 ? 0 : solarIntensityCurrent;
+                }
+                handleSolarIntensityHistory(solarIntensityCurrent);
+                app.setProperty("lastSolarLoggingTimeHistory", today.min);
+            }
+        }
+
+        if (
+            (App.getApp().getProperty("Opt1") == WEATHER) ||
+            (App.getApp().getProperty("Opt2") == WEATHER) ||
+            (App.getApp().getProperty("Opt3") == WEATHER) ||
+            (App.getApp().getProperty("Opt4") == WEATHER)
+        ) {
+            // Logging weather each 15 minutes and only if I don't have the value already logged
+            var lastWeatherCheck = (app.getProperty("lastWeatherCheck") == null ? null : app.getProperty("lastWeatherCheck").toNumber());
+            if (((today.min % 15 == 0) && (today.min != lastWeatherCheck)) || weatherIcon == null) {
+                handleWeather();
+                app.setProperty("lastWeatherCheck", today.min);
+            }
         }
 
         // second time calculation and dial drawing if any
@@ -650,41 +682,47 @@ class SundanceView extends WatchUi.WatchFace {
 
     function drawWeather(xPos, yPos, dc, today, position) {
         if (position == 1) {
-            xPos += 44;
+            xPos += 36;
             yPos -= 17;
         }
         if (position == 2) {
-            xPos += 50;
+            xPos += 45;
         }
         if (position == 3) {
-            xPos += 12;
+            xPos += 10;
         }
         if (position == 4) {
-            xPos += 14;
+            xPos += 7;
+        }
+
+        if ((weatherIcon == 0) && isNight) {
+            weatherIcon = 54;
         }
 
         if ((weatherIcon != null) && (weatherIcons[weatherIcon] != null)) {
             var degreeSignX = 0;
-            if (weatherTemp.toString().length() == 1) {
-                degreeSignX = 2;
-            } else if (weatherTemp.toString().length() == 2) {
+            if (weatherTemp.toString().length() == 3) {
                 degreeSignX = 4;
-            } else if (weatherTemp.toString().length() == 3) {
-                degreeSignX = 6;
             } else if (weatherTemp.toString().length() == 4) {
                 degreeSignX = 8;
+            } else if (weatherTemp.toString().length() == 5) {
+                degreeSignX = 14;
+                xPos -= 4;
+            } else if (weatherTemp.toString().length() == 6) {
+                degreeSignX = 18;
+                xPos -= 4;
             }
 
             dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(xPos - 36, yPos - 4, fntWeather, weatherIcons[weatherIcon], Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(xPos - 36, yPos - 22, fntWeather, weatherIcons[weatherIcon], Gfx.TEXT_JUSTIFY_CENTER);
 
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
 
             dc.setPenWidth(1);
             dc.drawCircle(xPos + degreeSignX, yPos + 5 , 3);
-            dc.drawText(xPos - 10, yPos, fntDataFields, weatherTemp, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(xPos + 4, yPos, fntDataFields, weatherTemp, Gfx.TEXT_JUSTIFY_CENTER);
         } else {
-            dc.drawText(xPos - 10, yPos, fntDataFields, "--", Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(xPos - 10, yPos, fntDataFields, "W8", Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -1860,14 +1898,16 @@ class SundanceView extends WatchUi.WatchFace {
     }
 
     function handleWeather() {
-        if (Toybox has :Weather) {
+        if ((Toybox has :Weather) && (Toybox.Weather has :getCurrentConditions)) {
             var weatherCond = Weather.getCurrentConditions();
-            if (weatherCond != null) {
+            if ((weatherCond != null) && (weatherCond.condition instanceof Number)) {
                 weatherIcon = weatherCond.condition;
+            } 
+            if ((weatherCond != null) && (weatherCond.temperature instanceof Number)) {
                 if (settings.temperatureUnits == System.UNIT_STATUTE) {
-                    weatherTemp = ((weatherCond.temperature * (9.0 / 5)) + 32).format("%02d"); // Convert to Farenheit: ensure floating point division.
+                    weatherTemp = ((weatherCond.temperature * (9.0 / 5)) + 32).format("%02d") + " F"; 
                 } else {
-                    weatherTemp = weatherCond.temperature;
+                    weatherTemp = weatherCond.temperature + " C";
                 }
             } 
         }    

@@ -51,5 +51,5 @@
 
 	<font antialias="true" id="fntDataFieldsX" filename="nk57_X.fnt" /> 
 
-	<font antialias="true" id="fntWeather" filename="weather.fnt" filter="ABCDEFGHIJKLMNOP" /> 
+	<font antialias="true" id="fntWeather" filename="weather_art.fnt" /> 
 </fonts>

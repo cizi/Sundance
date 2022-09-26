@@ -1,3 +1,12 @@
+Version 6.5
+- New icon set for weather 
+- Fixed mismatched weather icons vs forecast
+Version 6.4
+Version 6.3
+-Added weather functionality
+- Optimalization of code for reading pressure, solar and weather
+Version 6.2
+- Temporary removed weather functionality (field option persist)
 Version 6.1
 - Added weather as field option
 Version 6.0
