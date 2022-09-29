@@ -126,6 +126,7 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var field4 = null;
 
     hidden var weatherIcons;
+    hidden var weatherIconsCentering;
     var weatherIcon = null; 
     var weatherTemp = "--";
     var isNight;
@@ -202,7 +203,7 @@ class SundanceView extends WatchUi.WatchFace {
         // "G" - rain = 3 = 25 = 27 = 45
         // "3" - cloudy = 20 = 52
         // "*" - unknow = 53
-        // "/" - vocanic ash = 38
+        // "/" - volcanic ash = 38
         // "4" - two thunders (Squall) = 36
         // "," - windy = 5 = 48
         // "6" - moon (clear sky) = 54 my own code for night and clear sky
@@ -246,7 +247,7 @@ class SundanceView extends WatchUi.WatchFace {
             35 => "z", 
             36 => "4", 
             37 => "E", 
-            38 => "E", 
+            38 => "/", 
             39 => "z", 
             40 => "2", 
             41 => ":", 
@@ -263,6 +264,44 @@ class SundanceView extends WatchUi.WatchFace {
             52 => "3", 
             53 => "*",
             54 => "6", 
+        };
+
+        weatherIconsCentering = {
+            3 => 4, 
+            4 => 4, 
+            6 => 4, 
+            7 => 4, 
+            8 => 4, 
+            9 => 4, 
+            11 => 4, 
+            12 => 4, 
+            13 => 4, 
+            14 => 4, 
+            15 => 4, 
+            16 => 4, 
+            17 => 4, 
+            18 => 4, 
+            19 => 4, 
+            21 => 4, 
+            24 => 4, 
+            25 => 4, 
+            26 => 4, 
+            27 => 4, 
+            28 => 4, 
+            29 => 4, 
+            31 => 4, 
+            34 => 4, 
+            36 => 4, 
+            37 => 4, 
+            38 => 4, 
+            43 => 4, 
+            44 => 4, 
+            45 => 4, 
+            46 => 4, 
+            47 => 4, 
+            50 => 4, 
+            51 => 4, 
+            54 => 4,
         };
     }
 
@@ -714,7 +753,7 @@ class SundanceView extends WatchUi.WatchFace {
             }
 
             dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(xPos - 36, yPos - 22, fntWeather, weatherIcons[weatherIcon], Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(xPos - 36, yPos - 22 - (weatherIconsCentering[weatherIcon] != null ? weatherIconsCentering[weatherIcon] : 0), fntWeather, weatherIcons[weatherIcon], Gfx.TEXT_JUSTIFY_CENTER);
 
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
 

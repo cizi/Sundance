@@ -1,3 +1,5 @@
+Version 6.6
+- Better weather icon centering
 Version 6.5
 - New icon set for weather 
 - Fixed mismatched weather icons vs forecast
