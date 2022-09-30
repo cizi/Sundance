@@ -119,11 +119,12 @@ class WeatherForecast {
         47 => 4, 
         50 => 4, 
         51 => 4, 
+        53 => 4, 
         54 => 4,
     };
 
     function getIconCentering(weatherCode) {
-        if (weatherIconsCentering[weatherCode] != null) {
+        if ((weatherCode != null) && (weatherIconsCentering[weatherCode] != null)) {
             return weatherIconsCentering[weatherCode];
         } else {
             return 0;
@@ -131,6 +132,10 @@ class WeatherForecast {
     }
 
     function getIconChar(weatherCode) {
+        if (weatherCode == null) {
+            return null;
+        }
+
         return weatherIcons[weatherCode];
     }
 }

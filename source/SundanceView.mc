@@ -108,7 +108,7 @@ class SundanceView extends WatchUi.WatchFace {
     hidden var field3 = null;
     hidden var field4 = null;
 
-    var weatherIcon = null; 
+    var weatherCode = null; 
     var weatherTemp = "--";
     var isNight;
 
@@ -347,7 +347,7 @@ class SundanceView extends WatchUi.WatchFace {
         ) {
             // Logging weather each 15 minutes and only if I don't have the value already logged
             var lastWeatherCheck = (app.Storage.getValue("lastWeatherCheck") == null ? null : app.Storage.getValue("lastWeatherCheck").toNumber());
-            if (((today.min % 15 == 0) && (today.min != lastWeatherCheck)) || weatherIcon == null) {
+            if (((today.min % 15 == 0) && (today.min != lastWeatherCheck)) || weatherCode == null) {
                 handleWeather();
                 app.Storage.setValue("lastWeatherCheck", today.min);
             }
@@ -604,12 +604,12 @@ class SundanceView extends WatchUi.WatchFace {
             xPos += 7;
         }
 
-        if ((weatherIcon == 0) && isNight) {
-            weatherIcon = 54;
+        if ((weatherCode == 0) && isNight) {
+            weatherCode = 54;
         }
 
-        var weatherIconChar = app.weatherForecast.getIconChar(weatherIcon);
-        if ((weatherIcon != null) && (weatherIconChar != null)) {
+        var weatherIconChar = app.weatherForecast.getIconChar(weatherCode);
+        if (weatherIconChar != null) {
             var degreeSignX = 0;
             if (weatherTemp.toString().length() == 3) {
                 degreeSignX = 4;
@@ -624,7 +624,7 @@ class SundanceView extends WatchUi.WatchFace {
             }
 
             dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
-            dc.drawText(xPos - 36, yPos - 22 - app.weatherForecast.getIconCentering(weatherIcon), fntWeather, weatherIconChar, Gfx.TEXT_JUSTIFY_CENTER);
+            dc.drawText(xPos - 36, yPos - 22 - app.weatherForecast.getIconCentering(weatherCode), fntWeather, weatherIconChar, Gfx.TEXT_JUSTIFY_CENTER);
 
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
 
@@ -632,6 +632,10 @@ class SundanceView extends WatchUi.WatchFace {
             dc.drawCircle(xPos + degreeSignX, yPos + 5 , 3);
             dc.drawText(xPos + 4, yPos, fntDataFields, weatherTemp, Gfx.TEXT_JUSTIFY_CENTER);
         } else {
+            xPos += 10;
+            dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
+            dc.drawText(xPos - 36, yPos - 22 - app.weatherForecast.getIconCentering(53), fntWeather, app.weatherForecast.getIconChar(53), Gfx.TEXT_JUSTIFY_CENTER);
+            dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
             dc.drawText(xPos - 10, yPos, fntDataFields, "W8", Gfx.TEXT_JUSTIFY_CENTER);
         }
     }
@@ -1808,10 +1812,12 @@ class SundanceView extends WatchUi.WatchFace {
     }
 
     function handleWeather() {
+        weatherCode = null; 
+        weatherTemp = "--";
         if ((Toybox has :Weather) && (Toybox.Weather has :getCurrentConditions)) {
             var weatherCond = Weather.getCurrentConditions();
             if ((weatherCond != null) && (weatherCond.condition instanceof Number)) {
-                weatherIcon = weatherCond.condition;
+                weatherCode = weatherCond.condition;
             } 
             if ((weatherCond != null) && (weatherCond.temperature instanceof Number)) {
                 if (settings.temperatureUnits == System.UNIT_STATUTE) {
@@ -1820,7 +1826,7 @@ class SundanceView extends WatchUi.WatchFace {
                     weatherTemp = weatherCond.temperature + " C";
                 }
             } 
-        }    
+        }
     }
 
     // Draw filled pointer like a trinagle to dial by the settings
