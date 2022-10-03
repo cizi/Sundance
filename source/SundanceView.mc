@@ -604,8 +604,13 @@ class SundanceView extends WatchUi.WatchFace {
             xPos += 7;
         }
 
+        // replacing day icon for night icon
         if ((weatherCode == 0) && isNight) {
             weatherCode = 54;
+        }
+        // replacing night icon for day icon
+        if ((weatherCode == 54) && !isNight) {
+            weatherCode = 0;
         }
 
         var weatherIconChar = app.weatherForecast.getIconChar(weatherCode);
