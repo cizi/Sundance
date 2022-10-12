@@ -1,3 +1,5 @@
+Version 6.9
+- fixing weather icon if night clear sky changed to day clear sky
 Version 6.8
 - fixed unconsistent weather state
 Version 6.7
