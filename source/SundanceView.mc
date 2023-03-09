@@ -471,6 +471,10 @@ class SundanceView extends WatchUi.WatchFace {
             case app.CALORIES:
             drawCalories(fieldCors[0], fieldCors[1], dc, position);
             break;
+
+            case app.CALORIES_ACTIVE:
+            drawActiveCalories(fieldCors[0], fieldCors[1], dc, position, today);
+            break;
             
             case app.SECOND_TIME:
             drawSecondTime(fieldCors[0], fieldCors[1], dc, secondTime, position);
@@ -634,6 +638,9 @@ class SundanceView extends WatchUi.WatchFace {
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
 
             dc.setPenWidth(1);
+            if (position == 1 && is240dev) {
+                yPos -= 2;
+            }
             dc.drawCircle(xPos + degreeSignX, yPos + 5 , 3);
             dc.drawText(xPos + 4, yPos, fntDataFields, weatherTemp, Gfx.TEXT_JUSTIFY_CENTER);
         } else {
@@ -1274,6 +1281,43 @@ class SundanceView extends WatchUi.WatchFace {
         dc.drawText(posX + 20, posY - dataFieldsYCentering, fntDataFields, caloriesCount.toString(), Gfx.TEXT_JUSTIFY_LEFT);
     }
 
+    // Draw calories per day
+    function drawActiveCalories(posX, posY, dc, position, today) {
+        if (position == 1) {
+            posX -= 2;
+            posY = (is240dev ? posY - 18 : posY - 16);
+        }
+            if (position == 3) {
+                posX = (is240dev ? (posX - 38) : (posX - 32));
+        }
+        if (position == 4) {
+            posX = (is240dev ? (posX - 32) : (posX - 32));
+        }
+
+        dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
+        dc.drawText(posX - 2, posY - 4, fntIcons, "6", Gfx.TEXT_JUSTIFY_LEFT);
+
+        dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
+
+		var profile = UserProfile.getProfile();
+		var age = today.year - profile.birthYear;
+		var weight = profile.weight / 1000.0;
+        var restCalories = 0;
+        var activeCalories = 0;
+		if (profile.gender == UserProfile.GENDER_MALE) {
+			restCalories = 5.2 - 6.116*age + 7.628*profile.height + 12.2*weight;
+		} else {// female
+			restCalories = -197.6 - 6.116*age + 7.628*profile.height + 12.2*weight;
+		}
+		restCalories   = Math.round((today.hour*60+today.min) * restCalories / 1440 ).toNumber();
+        var info = ActivityMonitor.getInfo();
+		activeCalories = info.calories - restCalories;
+       
+        if (is240dev && (activeCalories > 999) && ((position == 2) || (position == 3))){
+            activeCalories = (activeCalories / 1000.0).format("%.1f").toString() + "M";
+        }
+        dc.drawText(posX + 20, posY - dataFieldsYCentering, fntDataFields, activeCalories.toString(), Gfx.TEXT_JUSTIFY_LEFT);
+    }
 
     // Draw BT connection status
     function drawBtConnection(dc) {
@@ -1351,24 +1395,24 @@ class SundanceView extends WatchUi.WatchFace {
             if (phase == 1) {
                 dc.setColor(bgColor, frColor);
                 dc.fillCircle(xPos - 5, yPos, radius);
-                } else if (phase == 2) {
-                    dc.setColor(bgColor, frColor);
+            } else if (phase == 2) {
+                dc.setColor(bgColor, frColor);
                 dc.fillRectangle(xPos - radius, yPos - radius, radius, (radius * 2) + 2);
-                } else if (phase == 3) {
-                    dc.setPenWidth(radius - 2);
-                    dc.setColor(bgColor, frColor);
-                    dc.drawArc(xPos + 5, yPos, radius + 5, Gfx.ARC_CLOCKWISE, 270, 90);
-                } else if (phase == 5) {
-                    dc.setPenWidth(radius - 2);
-                    dc.setColor(bgColor, frColor);
-                    dc.drawArc(xPos - 5, yPos, radius + 5, Gfx.ARC_CLOCKWISE, 90, 270);
-                } else if (phase == 6) {
-                    dc.setColor(bgColor, frColor);
+            } else if (phase == 3) {
+                dc.setPenWidth(radius - 2);
+                dc.setColor(bgColor, frColor);
+                dc.drawArc(xPos + 5, yPos, radius + 5, Gfx.ARC_CLOCKWISE, 270, 90);
+            } else if (phase == 5) {
+                dc.setPenWidth(radius - 2);
+                dc.setColor(bgColor, frColor);
+                dc.drawArc(xPos - 5, yPos, radius + 5, Gfx.ARC_CLOCKWISE, 90, 270);
+            } else if (phase == 6) {
+                dc.setColor(bgColor, frColor);
                 dc.fillRectangle(xPos + (radius / 2) - 3, yPos - radius, radius, (radius * 2) + 2);
-                } else if (phase == 7) {
-                    dc.setColor(bgColor, frColor);
+            } else if (phase == 7) {
+                dc.setColor(bgColor, frColor);
                 dc.fillCircle(xPos + 5, yPos, radius);
-                }
+            }
         }
     }
 

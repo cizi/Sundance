@@ -22,6 +22,7 @@ class SundanceApp extends Application.AppBase {
     const DISABLED = 100;
     const DISTANCE = 11;
     const BATTERY_IN_DAYS = 12;
+    const CALORIES_ACTIVE = 15;
 
     function initialize() {
         AppBase.initialize();
@@ -43,7 +44,7 @@ class SundanceApp extends Application.AppBase {
     // New app settings have been received so trigger a UI update
     function onSettingsChanged() {
         var uc = new UiCalc();
-        var halfWidth = Application.getApp().getProperty("halfWidth");
+        var halfWidth = Application.getApp().Storage.getValue("halfWidth");
         var app = Application.getApp();
         if (app.getProperty("UseWatchBezel")) {
             app.Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));

@@ -21,6 +21,7 @@
     <string id="Steps">Today's steps</string>
     <string id="Distance">Today's distance (km)</string>    
     <string id="Calories">Today's calories (kCal / MCal)</string>
+    <string id="ActiveCalories">Today's active calories (kCal / MCal)</string>
     <string id="HR">HR</string>
     <string id="Battery">Battery %</string>
     <string id="BatteryInDays">Battery remaining in days</string>
