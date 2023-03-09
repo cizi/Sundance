@@ -1,3 +1,9 @@
+Version 7.1
+- position of weather temp for 240 device on position 1
+Version 7
+- update crash after setting change
+- added active calories (need testing)
+- code optimalization 
 Version 6.9
 - fixing weather icon if night clear sky changed to day clear sky
 Version 6.8

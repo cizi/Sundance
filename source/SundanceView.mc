@@ -638,7 +638,7 @@ class SundanceView extends WatchUi.WatchFace {
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
 
             dc.setPenWidth(1);
-            if (position == 1 && is240dev) {
+            if (position == 1 && is240dev && app.getProperty("UseBiggerFontDataFields")) {
                 yPos -= 2;
             }
             dc.drawCircle(xPos + degreeSignX, yPos + 5 , 3);
