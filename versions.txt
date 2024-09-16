@@ -1,3 +1,5 @@
+Version 7.2
+- added Fenix 8 solar support
 Version 7.1
 - position of weather temp for 240 device on position 1
 Version 7

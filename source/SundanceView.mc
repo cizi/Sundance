@@ -170,8 +170,6 @@ class SundanceView extends WatchUi.WatchFace {
         is218dev = (dc.getWidth() == 218);
         is240dev = (dc.getWidth() == 240);
         is280dev = (dc.getWidth() == 280);
-        // is416dev = (dc.getWidth() == 416);
-
         halfWidth = dc.getWidth() / 2;
         secFontHeight = Gfx.getFontHeight(Gfx.FONT_TINY);
         secFontWidth = (is280dev ? 24 : 22);
@@ -567,7 +565,7 @@ class SundanceView extends WatchUi.WatchFace {
             dc.drawText(xPos, yPos, fntDataFields, "W8", Gfx.TEXT_JUSTIFY_CENTER);
         } else {
             var solarInt;
-            var solarIntPrev;
+            var solarIntPrev = 0;
             var sol;
             dc.setPenWidth(2);
             dc.setColor(themeColor, Gfx.COLOR_TRANSPARENT);
