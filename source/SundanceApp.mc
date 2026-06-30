@@ -1,4 +1,5 @@
 using Toybox.Application;
+using Toybox.Application.Storage;
 using Toybox.WatchUi;
 
 class SundanceApp extends Application.AppBase {
@@ -44,12 +45,12 @@ class SundanceApp extends Application.AppBase {
     // New app settings have been received so trigger a UI update
     function onSettingsChanged() {
         var uc = new UiCalc();
-        var halfWidth = Application.getApp().Storage.getValue("halfWidth");
+        var halfWidth = Storage.getValue("halfWidth");
         var app = Application.getApp();
         if (app.getProperty("UseWatchBezel")) {
-            app.Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));
+            Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));
         } else {
-            app.Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNums(halfWidth));
+            Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNums(halfWidth));
         }
 
         // Weather

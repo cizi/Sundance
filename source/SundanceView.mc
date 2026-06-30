@@ -3,6 +3,7 @@ using Toybox.Graphics as Gfx;
 using Toybox.System;
 using Toybox.Lang;
 using Toybox.Application as App;
+using Toybox.Application.Storage;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 using Toybox.Math;
@@ -186,11 +187,11 @@ class SundanceView extends WatchUi.WatchFace {
         field3 = [halfWidth + 56, yPosFor23];
         field4 = [(dc.getWidth() / 13) * 7, ((dc.getHeight() / 4).toNumber() * 3) - 6];     // on F6 [140, 189]
 
-        app.Storage.setValue("halfWidth", halfWidth);
+        Storage.setValue("halfWidth", halfWidth);
         if (app.getProperty("UseWatchBezel")) {
-            app.Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));
+            Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNumsForBuildInBezel(halfWidth));
         } else {
-            app.Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNums(halfWidth));
+            Storage.setValue("smallDialCoordsNums", uc.calculateSmallDialNums(halfWidth));
         }
         smallDialCoordsLines = uc.calculateSmallDialLines(halfWidth);
 
@@ -311,10 +312,10 @@ class SundanceView extends WatchUi.WatchFace {
             (app.getProperty("Opt4") == app.PRESSURE)
         ) {
             // Logging pressure history each hour and only if I don't have the value already logged
-            var lastPressureLoggingTimeHistoty = (app.Storage.getValue("lastPressureLoggingTimeHistoty") == null ? null : app.Storage.getValue("lastPressureLoggingTimeHistoty").toNumber());
+            var lastPressureLoggingTimeHistoty = (Storage.getValue("lastPressureLoggingTimeHistoty") == null ? null : Storage.getValue("lastPressureLoggingTimeHistoty").toNumber());
             if ((today.min == 0) && (today.hour != lastPressureLoggingTimeHistoty)) {
                 handlePressureHistorty(getPressure());
-                app.Storage.setValue("lastPressureLoggingTimeHistoty", today.hour);
+                Storage.setValue("lastPressureLoggingTimeHistoty", today.hour);
             }
         }
 
@@ -325,7 +326,7 @@ class SundanceView extends WatchUi.WatchFace {
             (app.getProperty("Opt4") == app.SOLAR_INTENSITY)
         ) {
             // Logging solar intensity history each five minutes only if I don't have the value already logged
-            var lastSolarLoggingTimeHistory = (app.Storage.getValue("lastSolarLoggingTimeHistory") == null ? null : app.Storage.getValue("lastSolarLoggingTimeHistory").toNumber());
+            var lastSolarLoggingTimeHistory = (Storage.getValue("lastSolarLoggingTimeHistory") == null ? null : Storage.getValue("lastSolarLoggingTimeHistory").toNumber());
             if ((today.min % app.getProperty("SolarIntensityPeriod").toNumber() == 0) && (today.min != lastSolarLoggingTimeHistory)) {
                 var solarIntensityCurrent = 0;
                 if (System.getSystemStats() has :solarIntensity) {
@@ -333,7 +334,7 @@ class SundanceView extends WatchUi.WatchFace {
                     solarIntensityCurrent = solarIntensityCurrent < 0 ? 0 : solarIntensityCurrent;
                 }
                 handleSolarIntensityHistory(solarIntensityCurrent);
-                app.Storage.setValue("lastSolarLoggingTimeHistory", today.min);
+                Storage.setValue("lastSolarLoggingTimeHistory", today.min);
             }
         }
 
@@ -344,10 +345,10 @@ class SundanceView extends WatchUi.WatchFace {
             (app.getProperty("Opt4") == app.WEATHER)
         ) {
             // Logging weather each 15 minutes and only if I don't have the value already logged
-            var lastWeatherCheck = (app.Storage.getValue("lastWeatherCheck") == null ? null : app.Storage.getValue("lastWeatherCheck").toNumber());
+            var lastWeatherCheck = (Storage.getValue("lastWeatherCheck") == null ? null : Storage.getValue("lastWeatherCheck").toNumber());
             if (((today.min % 15 == 0) && (today.min != lastWeatherCheck)) || weatherCode == null) {
                 handleWeather();
-                app.Storage.setValue("lastWeatherCheck", today.min);
+                Storage.setValue("lastWeatherCheck", today.min);
             }
         }
 
@@ -559,7 +560,7 @@ class SundanceView extends WatchUi.WatchFace {
             xPos += 42;
         }
 
-        var solar1 = app.Storage.getValue(SOLAR_INTENSITY_ARRAY_KEY + "0");   // always need a current value which is saved on position 0
+        var solar1 = Storage.getValue(SOLAR_INTENSITY_ARRAY_KEY + "0");   // always need a current value which is saved on position 0
         if (solar1 == null) {
             dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
             dc.drawText(xPos, yPos, fntDataFields, "W8", Gfx.TEXT_JUSTIFY_CENTER);
@@ -572,9 +573,9 @@ class SundanceView extends WatchUi.WatchFace {
             var xPosGraph = xPos - 15;
             var yPosGraph = yPos + 21;
             for(sol = 6; sol > 1; sol-=1) {
-                solarInt = app.Storage.getValue(SOLAR_INTENSITY_ARRAY_KEY + sol.toString());
+                solarInt = Storage.getValue(SOLAR_INTENSITY_ARRAY_KEY + sol.toString());
 
-                solarIntPrev = app.Storage.getValue(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
+                solarIntPrev = Storage.getValue(SOLAR_INTENSITY_ARRAY_KEY + (sol - 1).toString());
                 dc.drawLine(xPosGraph - (sol * SOALR_X_STEP).toNumber(), yPosGraph - (SOLAR_Y_STEP * solarInt).toNumber(), xPosGraph - ((sol - 1) * SOALR_X_STEP).toNumber(), yPosGraph - (SOLAR_Y_STEP * solarIntPrev).toNumber());
             }
             //System.println(solar1);
@@ -703,9 +704,9 @@ class SundanceView extends WatchUi.WatchFace {
         location = activityInfo.currentLocation;
         if (location) {
             location = activityInfo.currentLocation.toRadians();
-            app.Storage.setValue("location", location);
+            Storage.setValue("location", location);
         } else {
-            location = app.Storage.getValue("location");
+            location = Storage.getValue("location");
         }
 
          if (location != null) {
@@ -1031,7 +1032,7 @@ class SundanceView extends WatchUi.WatchFace {
             if ((nr != 6) && (nr != 12) && (nr != 18) && ((nr % fullDialConfig) == 0)) {
                 // needs to do it for each number because thre is now fucnking indirection call like $$var or ${var}
                 hourValue = nr + angleToNrCorrection;
-                coords = app.Storage.getValue("smallDialCoordsNums").get(hourValue);
+                coords = (Storage.getValue("smallDialCoordsNums") as Lang.Dictionary).get(hourValue);
                 if (useBezelAsDial) {
                     drawNrDialRev(dc, hourValue, coords);
                 } else {
@@ -1458,7 +1459,7 @@ class SundanceView extends WatchUi.WatchFace {
             if (time.min % 10 == 0) {   // battery is calculating each ten minutes (hope in more accurate results)
                 getRemainingBattery(time, batteryPercent);
             }
-            batText = (app.Storage.getValue("remainingBattery") == null ? "W8" : app.Storage.getValue("remainingBattery").toString());
+            batText = (Storage.getValue("remainingBattery") == null ? "W8" : Storage.getValue("remainingBattery").toString());
         }  
         dc.drawText(xPos + 29 - 34, yPos - dataFieldsYCentering, fntDataFields, batText, Gfx.TEXT_JUSTIFY_LEFT);  
     }
@@ -1467,20 +1468,20 @@ class SundanceView extends WatchUi.WatchFace {
     // set variable named remainingBattery to remaining battery in days / hours
     function getRemainingBattery(time, batteryPercent) { 
         if (System.getSystemStats().charging) {         // if charging
-            app.Storage.setValue("batteryTime", null);
-            app.Storage.setValue("remainingBattery", "W8");  // will show up "wait" sign
+            Storage.setValue("batteryTime", null);
+            Storage.setValue("remainingBattery", "W8");  // will show up "wait" sign
         } else {
-            var bat = app.Storage.getValue("batteryTime");
+            var bat = Storage.getValue("batteryTime");
             if (bat == null) {
                 bat = [time.now().value(), batteryPercent];
-                app.Storage.setValue("batteryTime", bat);
-                app.Storage.setValue("remainingBattery", "W8");    // still waiting for battery
+                Storage.setValue("batteryTime", bat);
+                Storage.setValue("remainingBattery", "W8");    // still waiting for battery
             } else {
                 var nowValue = time.now().value(); 
                 if ((batteryPercent + .5) > 100) {
                     bat = [time.now().value(), batteryPercent];
-                    app.Storage.setValue("batteryTime", bat);
-                    app.Storage.setValue("remainingBattery", "W8");  // will show up "wait" sign     
+                    Storage.setValue("batteryTime", bat);
+                    Storage.setValue("remainingBattery", "W8");  // will show up "wait" sign     
                 } else if (bat[1] > batteryPercent) {
                     var remaining = (bat[1] - batteryPercent).toFloat() / (nowValue - bat[0]).toFloat();
                     remaining = remaining * 60 * 60;    // percent consumption per hour
@@ -1490,7 +1491,7 @@ class SundanceView extends WatchUi.WatchFace {
                     } else {
                         remaining = Math.round(remaining).toNumber() + "h";
                     }
-                    app.Storage.setValue("remainingBattery", remaining);
+                    Storage.setValue("remainingBattery", remaining);
                 } 
             }
         }
@@ -1550,13 +1551,13 @@ class SundanceView extends WatchUi.WatchFace {
         if (position == 3) {
             xPos -= (is240dev ? 4 : (is218dev ? 8 : 0));
         }
-        var lastPressureLoggingTime = (app.Storage.getValue("lastPressureLoggingTime") == null ? null : app.Storage.getValue("lastPressureLoggingTime").toNumber());
+        var lastPressureLoggingTime = (Storage.getValue("lastPressureLoggingTime") == null ? null : Storage.getValue("lastPressureLoggingTime").toNumber());
         if ((today.min == 0) && (today.hour != lastPressureLoggingTime)) {   // grap is redrawning only in whole hour
             var baroFigure = 0;
             var targetPeriod = app.getProperty("PressureGraphPeriod");
-            var pressure3 = app.Storage.getValue(PRESSURE_ARRAY_KEY + targetPeriod.toString());  // last saved value for current setting
-            var pressure2 = app.Storage.getValue(PRESSURE_ARRAY_KEY + (targetPeriod / 2).toString());    // middle period for current setting
-            var pressure1 = app.Storage.getValue("pressure0");   // always need a current value which is saved on position 0
+            var pressure3 = Storage.getValue(PRESSURE_ARRAY_KEY + targetPeriod.toString());  // last saved value for current setting
+            var pressure2 = Storage.getValue(PRESSURE_ARRAY_KEY + (targetPeriod / 2).toString());    // middle period for current setting
+            var pressure1 = Storage.getValue("pressure0");   // always need a current value which is saved on position 0
             var PRESSURE_GRAPH_BORDER = app.getProperty("PressureGraphBorder");    // pressure border to change the graph in hPa
             if (pressure1 != null) {    // always should have at least pressure1 but test it for sure
                 pressure1 = pressure1.toNumber();
@@ -1589,11 +1590,11 @@ class SundanceView extends WatchUi.WatchFace {
                     }
                 }
             }
-            app.Storage.setValue("lastPressureLoggingTime", today.hour);
-            app.Storage.setValue("baroFigure", baroFigure);
+            Storage.setValue("lastPressureLoggingTime", today.hour);
+            Storage.setValue("baroFigure", baroFigure);
         }        
         
-        var baroFigure = (app.Storage.getValue("baroFigure") == null ? 0 : app.Storage.getValue("baroFigure").toNumber());
+        var baroFigure = (Storage.getValue("baroFigure") == null ? 0 : Storage.getValue("baroFigure").toNumber());
         drawPressureGraph(xPos - 34, yPos + 10, dc, baroFigure);
         dc.setColor(frColor, Gfx.COLOR_TRANSPARENT);
         
@@ -1825,13 +1826,13 @@ class SundanceView extends WatchUi.WatchFace {
         for(var pressure = pressures.size(); pressure > 1; pressure-=1) {
             preindex = pressure - 2;
             if (preindex >= 0) {
-                if (app.Storage.getValue(pressures[preindex]) == null) {
-                    app.Storage.setValue(pressures[preindex], pressureValue);
+                if (Storage.getValue(pressures[preindex]) == null) {
+                    Storage.setValue(pressures[preindex], pressureValue);
                 }
-                app.Storage.setValue(pressures[pressure - 1], app.Storage.getValue(pressures[preindex]));             
+                Storage.setValue(pressures[pressure - 1], Storage.getValue(pressures[preindex]));             
             }
         }
-        app.Storage.setValue("pressure0", pressureValue);
+        Storage.setValue("pressure0", pressureValue);
     }
 
     function handleSolarIntensityHistory(solarIntensityValue) {
@@ -1847,15 +1848,15 @@ class SundanceView extends WatchUi.WatchFace {
         for(var solar = solars.size(); solar > 1; solar-=1) {
             preindex = solar - 2;
             if (preindex >= 0) {
-                if (app.Storage.getValue(solars[preindex]) == null) {
-                    app.Storage.setValue(solars[preindex], solarIntensityValue);
-                    //app.Storage.setValue(solars[preindex], solarMock[solar]); MOCK
+                if (Storage.getValue(solars[preindex]) == null) {
+                    Storage.setValue(solars[preindex], solarIntensityValue);
+                    //Storage.setValue(solars[preindex], solarMock[solar]); MOCK
                 }
-                app.Storage.setValue(solars[solar - 1], app.Storage.getValue(solars[preindex]));             
-                //app.Storage.setValue(solars[solar - 1], solarMock[preindex]);    MOCK     
+                Storage.setValue(solars[solar - 1], Storage.getValue(solars[preindex]));             
+                //Storage.setValue(solars[solar - 1], solarMock[preindex]);    MOCK     
             }
         }
-        app.Storage.setValue(SOLAR_INTENSITY_ARRAY_KEY + "0", solarIntensityValue);
+        Storage.setValue(SOLAR_INTENSITY_ARRAY_KEY + "0", solarIntensityValue);
     }
 
     function handleWeather() {
